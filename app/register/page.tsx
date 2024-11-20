@@ -1,7 +1,7 @@
-import { LoginForm } from '@/components/LoginForm'
 import backgroundImage from '@/assets/backgroundBg.png'
+import { RegisterForm } from '@/components/RegisterForm'
 
-export default function Home() {
+export default function Register() {
   return (
     <div
       className="flex justify-center items-center h-screen bg-cover relative bg-center "
@@ -9,7 +9,7 @@ export default function Home() {
         backgroundImage: `url(${backgroundImage.src})`,
       }}
     >
-      <LoginForm />
+      <RegisterForm />
     </div>
   )
 }
