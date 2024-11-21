@@ -1,6 +1,7 @@
 import { ChartBarIncreasing, ChartNoAxesCombined } from 'lucide-react'
 import { Dialog, DialogContent, DialogTitle, DialogTrigger } from './ui/dialog'
 import bgChart from '@/assets/backgroundChart.png'
+import bgStats from '@/assets/backgroundStatistics.png'
 
 export function Cards() {
   return (
@@ -28,7 +29,7 @@ export function Cards() {
       <Dialog>
         <DialogTrigger
           style={{
-            backgroundImage: `url(${bgChart.src})`,
+            backgroundImage: `url(${bgStats.src})`,
           }}
           className="w-[510px] h-[233px] relative"
         >
