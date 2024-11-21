@@ -2,7 +2,7 @@
 import Image from 'next/image'
 import logo from '@/assets/logotipo.svg'
 import { useEffect, useState } from 'react'
-import { usePathname } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
 import Link from 'next/link'
 import {
   NavigationMenu,
@@ -14,6 +14,7 @@ import {
 } from './ui/navigation-menu'
 
 export function Header() {
+  const router = useRouter()
   const pathname = usePathname()
   const [path, setPath] = useState<string>()
   useEffect(() => {
@@ -56,7 +57,10 @@ export function Header() {
           <NavigationMenuItem>
             <NavigationMenuTrigger>Bem vindo, Marcos</NavigationMenuTrigger>
             <NavigationMenuContent className="flex flex-col min-w-[170px] px-5">
-              <NavigationMenuLink className="py-2 hover:text-[#D2FD01] transition-colors duration-200">
+              <NavigationMenuLink
+                onClick={() => router.push('/profile')}
+                className="py-2 hover:text-[#D2FD01] cursor-pointer transition-colors duration-200"
+              >
                 Perfil
               </NavigationMenuLink>
               <NavigationMenuLink className="py-2 hover:text-[#D2FD01] transition-colors duration-200">

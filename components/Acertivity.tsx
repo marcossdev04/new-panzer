@@ -5,41 +5,43 @@ import { Label, Pie, PieChart } from 'recharts'
 
 import { Card, CardContent } from '@/components/ui/card'
 import {
-  ChartConfig,
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
 } from '@/components/ui/chart'
 
-const chartData = [
-  { browser: 'chrome', AS: 275, fill: 'url(#gradientFill)' }, // Gradiente para Chrome
-  { browser: 'safari', AS: 200, fill: 'rgba(0, 0, 0, 0.5)' }, // Preto com opacidade 50%
-]
+interface Props {
+  hitHate: number | undefined
+}
 
-const chartConfig = {
-  AS: {
-    label: 'AS',
-  },
-  chrome: {
-    label: 'Chrome',
-    color: 'hsl(var(--chart-1))',
-  },
-} satisfies ChartConfig
+export function Assertiveness({ hitHate }: Props) {
+  // Garante um valor válido para hitHate, mesmo se undefined
+  const hitRate = hitHate ?? 0
+  const complement = 100 - hitRate
 
-export function Assertiveness() {
-  const totalVisitors = React.useMemo(() => {
-    return chartData.reduce((acc, curr) => acc + curr.AS, 0)
-  }, [])
+  // Atualiza os dados dinamicamente
+  const chartData = [
+    { browser: 'chrome', AS: hitRate, fill: 'url(#gradientFill)' }, // Gradiente para Chrome
+    { browser: 'complement', AS: complement, fill: 'rgba(0, 0, 0, 0.5)' }, // Preto com opacidade 50%
+  ]
 
   return (
     <Card className="flex flex-col bg-transparent border-none">
       <CardContent className="flex-1 pb-0">
         <ChartContainer
-          config={chartConfig}
+          config={{
+            AS: {
+              label: 'AS',
+            },
+            chrome: {
+              label: 'Chrome',
+              color: 'hsl(var(--chart-1))',
+            },
+          }}
           className="mx-auto aspect-square max-h-[400px]" // Aumenta o contêiner
         >
           <PieChart width={350} height={350}>
-            {' '}
+            {/* Definição de gradiente */}
             <defs>
               <linearGradient
                 id="gradientFill"
@@ -52,10 +54,12 @@ export function Assertiveness() {
                 <stop offset="100%" stopColor="#58D764" />
               </linearGradient>
             </defs>
+            {/* Tooltip */}
             <ChartTooltip
               cursor={false}
               content={<ChartTooltipContent hideLabel />}
             />
+            {/* Gráfico */}
             <Pie
               data={chartData}
               dataKey="AS"
@@ -66,6 +70,7 @@ export function Assertiveness() {
               startAngle={90}
               endAngle={-270}
             >
+              {/* Label personalizada */}
               <Label
                 content={({ viewBox }) => {
                   if (viewBox && 'cx' in viewBox && 'cy' in viewBox) {
@@ -81,12 +86,12 @@ export function Assertiveness() {
                           y={viewBox.cy}
                           className="fill-[#d2ff00] text-4xl font-bold"
                         >
-                          {totalVisitors.toLocaleString()}
+                          {hitRate}%
                         </tspan>
                         <tspan
                           x={viewBox.cx}
                           y={(viewBox.cy || 0) + 24}
-                          className="fill-white text-lg"
+                          className="fill-white text-base"
                         >
                           Assertividade
                         </tspan>

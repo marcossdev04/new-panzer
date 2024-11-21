@@ -9,6 +9,7 @@ import { Bai_Jamjuree } from 'next/font/google'
 import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import background from '@/assets/background.png'
+import { FilterProvider } from '@/Store/useFilters'
 
 const bai = Bai_Jamjuree({
   weight: '700',
@@ -35,7 +36,9 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <QueryClientProvider client={queryClient}>
-            <AuthContextProvider>{children}</AuthContextProvider>
+            <AuthContextProvider>
+              <FilterProvider>{children}</FilterProvider>
+            </AuthContextProvider>
             <ToastContainer />
           </QueryClientProvider>
         </ThemeProvider>

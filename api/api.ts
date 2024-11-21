@@ -44,7 +44,7 @@ api.interceptors.response.use(
       } catch (refreshError) {
         cookies.remove('token_panzer_football')
         cookies.remove('refresh_panzer_football')
-        window.location.href = '/admin'
+        window.location.href = '/'
         return Promise.reject(refreshError)
       }
     }
