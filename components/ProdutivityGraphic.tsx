@@ -1,11 +1,5 @@
 import { CartesianGrid, XAxis, Area, AreaChart } from 'recharts'
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from './ui/card'
+import { Card, CardContent, CardHeader, CardTitle } from './ui/card'
 import {
   ChartConfig,
   ChartContainer,
@@ -14,21 +8,14 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from './ui/chart'
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from './ui/select'
 import React from 'react'
 import { Graphs } from './GraphicCard'
 
-interface Props{
-    results: Graphs|undefined
-    isLoading:boolean |undefined
+interface Props {
+  results: Graphs | undefined
+  isLoading: boolean | undefined
 }
-export function ProdutivityGraphic({results,isLoading}:Props) {
+export function ProdutivityGraphic({ results, isLoading }: Props) {
   const chartConfig = {
     visitors: {
       label: 'Visitors',
@@ -65,7 +52,6 @@ export function ProdutivityGraphic({results,isLoading}:Props) {
         <div className="grid flex-1 gap-1 text-center sm:text-left">
           <CardTitle>Produtividade - Interativo</CardTitle>
         </div>
-        
       </CardHeader>
       <CardContent className="px-2 pt-4 sm:px-6 sm:pt-6">
         {isLoading ? (

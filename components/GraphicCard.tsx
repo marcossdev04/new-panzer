@@ -8,22 +8,6 @@ import { Profit } from '@/types/Profit'
 import { useFilter } from '@/Store/useFilter'
 import { useQuery } from 'react-query'
 import * as React from 'react'
-import { Area, AreaChart, CartesianGrid, XAxis } from 'recharts'
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card'
-import {
-  ChartConfig,
-  ChartContainer,
-  ChartLegend,
-  ChartLegendContent,
-  ChartTooltip,
-  ChartTooltipContent,
-} from '@/components/ui/chart'
 import {
   Select,
   SelectContent,
@@ -45,7 +29,7 @@ type ChartType = 'productivity' | 'matches' | 'profit'
 const chartTypeOptions = {
   productivity: 'Produtividade',
   matches: 'Quantidade de Partidas',
-  profit:'Lucro'
+  profit: 'Lucro',
 } as const
 
 const timeRangeOptions = {
@@ -57,7 +41,7 @@ const timeRangeOptions = {
 } as const
 
 export function GraphicCard() {
-    const [chartType, setChartType] = React.useState<ChartType>('productivity')
+  const [chartType, setChartType] = React.useState<ChartType>('productivity')
   const { userPlan } = useFilter()
   const [timeRange, setTimeRange] = React.useState('30d')
 
@@ -100,13 +84,11 @@ export function GraphicCard() {
     {
       refetchOnWindowFocus: false,
       keepPreviousData: false,
-      staleTime: 5 * 60 * 1000, 
-      cacheTime: 30 * 60 * 1000, 
-      enabled: dialogOpen, 
+      staleTime: 5 * 60 * 1000,
+      cacheTime: 30 * 60 * 1000,
+      enabled: dialogOpen,
     },
   )
-
- 
 
   return (
     <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
@@ -127,7 +109,10 @@ export function GraphicCard() {
       <DialogContent className="max-w-[1600px]">
         <DialogTitle>Gráficos</DialogTitle>
         <div className="flex gap-4 mb-4">
-          <Select value={chartType} onValueChange={(value: ChartType) => setChartType(value)}>
+          <Select
+            value={chartType}
+            onValueChange={(value: ChartType) => setChartType(value)}
+          >
             <SelectTrigger className="w-[200px]">
               <SelectValue placeholder="Selecione o tipo de gráfico" />
             </SelectTrigger>
@@ -154,12 +139,14 @@ export function GraphicCard() {
         </div>
         {chartType === 'productivity' ? (
           <ProdutivityGraphic isLoading={isLoading} results={results} />
-
-        ):chartType === 'matches'?
-          <MatchesGraphic isLoading={isLoading} matches={results?.match_for_date} />
-            : 
-        <ProfitGraphic isLoading={isLoading} profit={results?.profit}/>
-    }
+        ) : chartType === 'matches' ? (
+          <MatchesGraphic
+            isLoading={isLoading}
+            matches={results?.match_for_date}
+          />
+        ) : (
+          <ProfitGraphic isLoading={isLoading} profit={results?.profit} />
+        )}
       </DialogContent>
     </Dialog>
   )

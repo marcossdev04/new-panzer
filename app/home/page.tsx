@@ -19,6 +19,7 @@ export default function Home() {
     return response.data
   }
   const { data: user } = useQuery<User>(['getUser'], fetchUserData)
+  console.log(user)
   return (
     <div className="max-w-[1100px] mx-auto gap-10 flex flex-col">
       <div>

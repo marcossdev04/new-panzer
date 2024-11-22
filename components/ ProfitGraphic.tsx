@@ -1,8 +1,15 @@
-import React from "react"
-import { CartesianGrid, XAxis, Area, AreaChart } from "recharts"
-import { Card, CardContent, CardHeader, CardTitle } from "./ui/card"
-import { ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent, ChartLegend, ChartLegendContent } from "./ui/chart"
-import { Profit } from "@/types/Profit"
+import React from 'react'
+import { CartesianGrid, XAxis, Area, AreaChart } from 'recharts'
+import { Card, CardContent, CardHeader, CardTitle } from './ui/card'
+import {
+  ChartConfig,
+  ChartContainer,
+  ChartTooltip,
+  ChartTooltipContent,
+  ChartLegend,
+  ChartLegendContent,
+} from './ui/chart'
+import { Profit } from '@/types/Profit'
 
 interface ProfitGraphicProps {
   isLoading: boolean
@@ -18,26 +25,34 @@ export function ProfitGraphic({ isLoading, profit }: ProfitGraphicProps) {
   } satisfies ChartConfig
 
   const chartData = React.useMemo(
-    () => profit?.map(item => ({
-      date: new Date(item.date).toISOString().split('T')[0],
-      profit: item.profit,
-    })) ?? [],
-    [profit]
+    () =>
+      profit?.map((item) => ({
+        date: new Date(item.date).toISOString().split('T')[0],
+        profit: item.profit,
+      })) ?? [],
+    [profit],
   )
 
   if (isLoading) {
-    return <div className="flex justify-center items-center h-[250px]">Carregando...</div>
+    return (
+      <div className="flex justify-center items-center h-[250px]">
+        Carregando...
+      </div>
+    )
   }
 
   return (
     <Card>
-        <CardHeader className="flex items-center gap-2 space-y-0 border-b py-5 sm:flex-row">
+      <CardHeader className="flex items-center gap-2 space-y-0 border-b py-5 sm:flex-row">
         <div className="grid flex-1 gap-1 text-center sm:text-left">
           <CardTitle>Lucro</CardTitle>
         </div>
       </CardHeader>
       <CardContent className="px-2 pt-4 sm:px-6 sm:pt-6">
-        <ChartContainer config={chartConfig} className="aspect-auto h-[250px] w-full">
+        <ChartContainer
+          config={chartConfig}
+          className="aspect-auto h-[250px] w-full"
+        >
           <AreaChart data={chartData}>
             <defs>
               <linearGradient id="fillProfit" x1="0" y1="0" x2="0" y2="1">
