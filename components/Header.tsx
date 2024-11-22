@@ -20,7 +20,6 @@ export function Header() {
   useEffect(() => {
     setPath(pathname)
   }, [pathname])
-  console.log(path)
   return (
     <div className="flex items-center w-full justify-between rounded-b-[32px] border-t-0 border h-[86px] px-8 border-[#D2FD01]">
       <Link href={'/home'}>
