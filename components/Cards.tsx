@@ -1,31 +1,13 @@
-import { ChartBarIncreasing, ChartNoAxesCombined } from 'lucide-react'
+import { ChartBarIncreasing } from 'lucide-react'
 import { Dialog, DialogContent, DialogTitle, DialogTrigger } from './ui/dialog'
-import bgChart from '@/assets/backgroundChart.png'
+
 import bgStats from '@/assets/backgroundStatistics.png'
+import { GraphicCard } from './GraphicCard'
 
 export function Cards() {
   return (
     <div className="flex justify-between">
-      <Dialog>
-        <DialogTrigger
-          style={{
-            backgroundImage: `url(${bgChart.src})`,
-          }}
-          className="w-[510px] h-[233px] relative"
-        >
-          <div className="flex flex-col items-start gap-4 max-w-[230px] p-8 ">
-            <div className="bg-[#D2FD01] flex w-fit p-1 rounded-lg">
-              <ChartNoAxesCombined size={32} className="text-black" />
-            </div>
-            <div className="text-3xl text-start">Gráficos</div>
-            <div className="text-base text-[#D2FD01] underline">Explorar</div>
-          </div>
-        </DialogTrigger>
-        <DialogContent className="max-w-[1600px]">
-          <DialogTitle>Produtividade</DialogTitle>
-          <div>teste</div>
-        </DialogContent>
-      </Dialog>
+      <GraphicCard />
       <Dialog>
         <DialogTrigger
           style={{

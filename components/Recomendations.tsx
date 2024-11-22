@@ -44,7 +44,6 @@ export function Recomendations() {
       keepPreviousData: false,
     },
   )
-  console.log(params)
 
   if (isLoading) {
     return (
