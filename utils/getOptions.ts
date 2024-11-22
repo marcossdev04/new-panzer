@@ -1,4 +1,4 @@
-import data from '@/app/data/filters.json'
+import data from '@/data/filters.json'
 
 export const getOptions = (list: string[]) =>
   list.map((element) => ({

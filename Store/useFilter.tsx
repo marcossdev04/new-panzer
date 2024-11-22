@@ -9,7 +9,7 @@ import {
   useEffect,
 } from 'react'
 import moment from 'moment'
-import data from '@/app/data/filters.json'
+import data from '@/data/filters.json'
 import { api } from '@/api/api'
 import { User } from '@/types/User'
 import { useQuery } from 'react-query'

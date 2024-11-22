@@ -1,15 +1,14 @@
-import { SlidersHorizontal, ChevronsUpDown } from 'lucide-react'
+import { SlidersHorizontal } from 'lucide-react'
 import { Dialog, DialogContent, DialogTitle, DialogTrigger } from './ui/dialog'
 import { Label } from './ui/label'
 import { useFilter, FILTER_OPTIONS } from '@/Store/useFilter'
-import { useState } from 'react'
-import { Button } from './ui/button'
-import { Popover, PopoverContent, PopoverTrigger } from './ui/popover'
-import { cn } from '@/lib/utils'
-import { ScrollArea } from './ui/scroll-area'
+import React, { useMemo, useState } from 'react'
 import { Checkbox } from './ui/checkbox'
-import { Slider } from './ui/slider'
 import moment from 'moment'
+import { Input } from './ui/input'
+import { Slider } from './ui/slider'
+import { Select, SelectContent, SelectTrigger, SelectValue } from './ui/select'
+import { useVirtualizer } from '@tanstack/react-virtual'
 
 interface FilterOption {
   label: string
@@ -29,6 +28,7 @@ export function FilterComponent() {
 
   const [open, setOpen] = useState(false)
   const [openSelect, setOpenSelect] = useState<string | null>(null)
+  const [searchTerms, setSearchTerms] = useState<Record<string, string>>({})
 
   const commonFilters: FilterOption[] = [
     {
@@ -87,20 +87,92 @@ export function FilterComponent() {
     if (!Array.isArray(currentValues)) return
 
     const isSelected = currentValues.includes(value)
-
-    if (isSelected) {
-      updateTempFilter(
-        field as keyof typeof tempFilters,
-        currentValues.filter((item) => item !== value),
-      )
-    } else {
-      updateTempFilter(field as keyof typeof tempFilters, [
-        ...currentValues,
-        value,
-      ])
-    }
+    updateTempFilter(
+      field as keyof typeof tempFilters,
+      isSelected
+        ? currentValues.filter((item) => item !== value)
+        : [...currentValues, value],
+    )
   }
-  console.log(commonFilters)
+
+  const handleSearch = (field: string, searchTerm: string) => {
+    setSearchTerms((prev) => ({
+      ...prev,
+      [field]: searchTerm.toLowerCase(),
+    }))
+  }
+
+  const getFilteredOptions = (filter: FilterOption) => {
+    const searchTerm = searchTerms[filter.value] || ''
+    return filter.options.filter((option) =>
+      option.label.toLowerCase().includes(searchTerm),
+    )
+  }
+
+  const VirtualizedOptions = ({ filter }: { filter: FilterOption }) => {
+    const filteredOptions = useMemo(
+      () => getFilteredOptions(filter),
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+      [filter, searchTerms[filter.value]],
+    )
+
+    const parentRef = React.useRef<HTMLDivElement>(null)
+
+    const rowVirtualizer = useVirtualizer({
+      count: filteredOptions.length,
+      getScrollElement: () => parentRef.current,
+      estimateSize: () => 35,
+      overscan: 5,
+    })
+    return (
+      <div ref={parentRef} className="h-72 overflow-auto">
+        <div
+          style={{
+            height: `${rowVirtualizer.getTotalSize()}px`,
+            width: '100%',
+            position: 'relative',
+          }}
+        >
+          {rowVirtualizer.getVirtualItems().map((virtualItem) => {
+            const option = filteredOptions[virtualItem.index]
+            return (
+              <div
+                key={virtualItem.index}
+                style={{
+                  position: 'absolute',
+                  top: 0,
+                  left: 0,
+                  width: '100%',
+                  height: `${virtualItem.size}px`,
+                  transform: `translateY(${virtualItem.start}px)`,
+                }}
+              >
+                <div className="flex items-center space-x-2 p-4">
+                  <Checkbox
+                    id={`${filter.value}-${option.value}`}
+                    checked={(
+                      tempFilters[
+                        filter.value as keyof typeof tempFilters
+                      ] as string[]
+                    )?.includes(option.value)}
+                    onCheckedChange={() =>
+                      handleMultiSelect(filter.value, option.value)
+                    }
+                  />
+                  <label
+                    htmlFor={`${filter.value}-${option.value}`}
+                    className="text-sm font-medium leading-none"
+                  >
+                    {option.label}
+                  </label>
+                </div>
+              </div>
+            )
+          })}
+        </div>
+      </div>
+    )
+  }
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -114,7 +186,7 @@ export function FilterComponent() {
         <DialogTitle>Filtros</DialogTitle>
         <div className="overflow-auto h-[100%] px-2">
           <div className="flex flex-col gap-6 w-full">
-            {/* Data Controls */}
+            {/* Date Controls */}
             <div className="flex flex-col w-full gap-1">
               <Label className="text-base">Data inicial</Label>
               <input
@@ -137,7 +209,7 @@ export function FilterComponent() {
                 )}
               />
             </div>
-
+            {/* Probability Green Dev Range */}
             {/* Probability Green Range */}
             <div className="space-y-4">
               <Label>Probabilidade Green (Min-Max)</Label>
@@ -212,25 +284,18 @@ export function FilterComponent() {
               </div>
             </div>
 
-            {/* Multi-select filters */}
+            {/* Other filters with search */}
             {commonFilters.map((filter) => (
               <div key={filter.value} className="flex flex-col gap-2">
                 <Label>{filter.label}</Label>
-                <Popover
+                <Select
                   open={openSelect === filter.value}
                   onOpenChange={(isOpen) =>
                     setOpenSelect(isOpen ? filter.value : null)
                   }
                 >
-                  <PopoverTrigger asChild>
-                    <Button
-                      variant="outline"
-                      role="combobox"
-                      className={cn(
-                        'w-full justify-between',
-                        'px-3 py-2 h-auto',
-                      )}
-                    >
+                  <SelectTrigger className="w-full">
+                    <SelectValue placeholder={filter.placeholder}>
                       <div className="flex flex-wrap gap-1">
                         {(
                           tempFilters[
@@ -245,7 +310,7 @@ export function FilterComponent() {
                             ).map((item) => (
                               <span
                                 key={item}
-                                className="bg-secondary text-secondary-foreground px-2 py-1 rounded-md text-sm"
+                                className="bg-secondary text-secondary-foreground px-2 py-0 rounded-md text-sm"
                               >
                                 {filter.options.find(
                                   (option) => option.value === item,
@@ -257,40 +322,22 @@ export function FilterComponent() {
                           filter.placeholder
                         )}
                       </div>
-                      <ChevronsUpDown className="h-4 w-4 shrink-0 opacity-50" />
-                    </Button>
-                  </PopoverTrigger>
-                  <PopoverContent className="w-full p-0" align="start">
-                    <ScrollArea className="h-80 p-4">
-                      <div className="space-y-4">
-                        {filter.options.map((option) => (
-                          <div
-                            key={option.value}
-                            className="flex items-center space-x-2"
-                          >
-                            <Checkbox
-                              id={`${filter.value}-${option.value}`}
-                              checked={(
-                                tempFilters[
-                                  filter.value as keyof typeof tempFilters
-                                ] as string[]
-                              )?.includes(option.value)}
-                              onCheckedChange={() =>
-                                handleMultiSelect(filter.value, option.value)
-                              }
-                            />
-                            <label
-                              htmlFor={`${filter.value}-${option.value}`}
-                              className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                            >
-                              {option.label}
-                            </label>
-                          </div>
-                        ))}
-                      </div>
-                    </ScrollArea>
-                  </PopoverContent>
-                </Popover>
+                    </SelectValue>
+                  </SelectTrigger>
+                  <SelectContent align="start">
+                    <div className="p-4 border-b">
+                      <Input
+                        placeholder={filter.placeholder}
+                        value={searchTerms[filter.value] || ''}
+                        onChange={(e) =>
+                          handleSearch(filter.value, e.target.value)
+                        }
+                        className="h-8"
+                      />
+                    </div>
+                    <VirtualizedOptions filter={filter} />
+                  </SelectContent>
+                </Select>
               </div>
             ))}
           </div>
