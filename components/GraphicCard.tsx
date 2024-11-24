@@ -106,7 +106,7 @@ export function GraphicCard() {
           <div className="text-base text-[#D2FD01] underline">Explorar</div>
         </div>
       </DialogTrigger>
-      <DialogContent className="max-w-[1600px]">
+      <DialogContent className="max-w-[1200px]">
         <DialogTitle>Gráficos</DialogTitle>
         <div className="flex gap-4 mb-4">
           <Select

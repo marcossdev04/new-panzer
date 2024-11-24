@@ -248,7 +248,7 @@ export function StatsTable() {
           <div className="text-base text-[#D2FD01] underline">Explorar</div>
         </div>
       </DialogTrigger>
-      <DialogContent className="max-w-[1600px] max-h-[90vh] overflow-auto">
+      <DialogContent className="max-w-[1200px] px-4 max-h-[90vh] overflow-auto">
         <div className="flex justify-between items-center mb-4 pr-5">
           <DialogTitle>Estatísticas</DialogTitle>
           <Select
@@ -317,7 +317,7 @@ export function StatsTable() {
                     return (
                       <div
                         key={header.key}
-                        className={`${header.cols === 4 ? 'col-span-4' : header.cols === 3 ? 'col-span-3' : header.cols === 2 ? 'col-span-2' : 'col-span-1'} flex justify-center`}
+                        className={`${header.cols === 4 ? 'col-span-4' : header.cols === 3 ? 'col-span-3' : header.cols === 2 ? 'col-span-2' : 'col-span-1'} flex justify-center truncate w-full `}
                       >
                         {typeof item[header.key as keyof typeof item] ===
                         'number'

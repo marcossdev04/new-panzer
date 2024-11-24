@@ -14,11 +14,15 @@ import { api } from '@/api/api'
 import { User } from '@/types/User'
 import { useQuery } from 'react-query'
 
+export type PanzerPlan =
+  | 'Panzer Pro Hot'
+  | 'Panzer Pro'
+  | 'Panzer Novice'
+  | 'Panzer Corner'
 export interface IOption {
   label: string
   value: string
 }
-
 export interface IFilterOptions {
   market: IOption[]
   gols: IOption[]
@@ -53,8 +57,9 @@ export interface FilterContextData {
   clearTempFilters: () => void
   applyFilters: () => void
   getFilterParams: () => Record<string, string | undefined | number | boolean>
-  userPlan?: string
   filterOptions?: IFilterOptions
+  userPlan?: PanzerPlan
+  setUserPlan: (newPlan: PanzerPlan) => void
 }
 
 export const FILTER_OPTIONS = {
@@ -100,6 +105,16 @@ export function FilterProvider({ children }: { children: ReactNode }) {
   const [tempFilters, setTempFilters] = useState<FilterState>({
     ...initialFilterState,
   })
+  const [currentPlan, setCurrentPlan] = useState<PanzerPlan | undefined>(
+    undefined,
+  )
+
+  const setUserPlan = (newPlan: PanzerPlan) => {
+    setCurrentPlan(newPlan)
+    if (typeof window !== 'undefined') {
+      window.localStorage.setItem('userPlan', newPlan)
+    }
+  }
   const [filterOptions, setFilterOptions] = useState<IFilterOptions>()
 
   useEffect(() => {
@@ -138,24 +153,53 @@ export function FilterProvider({ children }: { children: ReactNode }) {
     return response.data
   })
 
-  const getUserPlan = (user?: User): string | undefined => {
+  const getUserPlan = (user?: User): PanzerPlan | undefined => {
+    if (currentPlan) return currentPlan
+
     if (!user?.products) return undefined
 
     const activeProduct = user.products.find(
       (product) => product.status === 'active',
     )
-
     if (!activeProduct) return undefined
 
     const productName = activeProduct.resources.product_name.toLowerCase()
 
-    if (productName.includes('pro hot')) return 'Panzer Pro Hot'
-    if (productName.includes('pro')) return 'Panzer Pro'
-    if (productName.includes('novice')) return 'Panzer Novice'
-    if (productName.includes('corner')) return 'Panzer Corner'
+    let plan: PanzerPlan
+    if (productName.includes('pro hot')) plan = 'Panzer Pro Hot'
+    else if (productName.includes('pro')) plan = 'Panzer Pro'
+    else if (productName.includes('novice')) plan = 'Panzer Novice'
+    else if (productName.includes('corner')) plan = 'Panzer Corner'
+    else plan = 'Panzer Novice'
 
-    return 'Panzer Novice'
+    // Salva o plano inicial no localStorage se estivermos no cliente
+    if (
+      typeof window !== 'undefined' &&
+      !window.localStorage.getItem('userPlan')
+    ) {
+      window.localStorage.setItem('userPlan', plan)
+    }
+
+    return plan
   }
+
+  useEffect(() => {
+    const handleStorageChange = (e: StorageEvent) => {
+      if (e.key === 'userPlan' && e.newValue) {
+        setCurrentPlan(e.newValue as PanzerPlan)
+      }
+    }
+
+    if (typeof window !== 'undefined') {
+      window.addEventListener('storage', handleStorageChange)
+    }
+
+    return () => {
+      if (typeof window !== 'undefined') {
+        window.removeEventListener('storage', handleStorageChange)
+      }
+    }
+  }, [])
 
   const userPlan = getUserPlan(user)
 
@@ -226,6 +270,8 @@ export function FilterProvider({ children }: { children: ReactNode }) {
         applyFilters,
         getFilterParams,
         filterOptions,
+        userPlan,
+        setUserPlan,
       }}
     >
       {children}

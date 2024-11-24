@@ -129,18 +129,36 @@ export function AuthContextProvider({ children }: AuthContextProviderProps) {
       push('/home')
     } catch (err: any) {
       console.log(err)
-      toast.error(
-        err.response.data.error === 'User not found'
-          ? 'Credenciais incorretas'
-          : err.response.data === 'The user is already logged in'
-            ? 'Usuário conectado em outro dispositivo'
-            : 'Aconteceu um erro inesperado com a API',
-        {
-          position: 'bottom-right',
-          theme: 'dark',
-          closeOnClick: true,
-        },
-      )
+      let errorMessage = 'Erro desconhecido'
+
+      if (err.response) {
+        const { status, data } = err.response
+
+        switch (status) {
+          case 403:
+            errorMessage = 'Usuário já está conectado'
+            break
+          case 404:
+            errorMessage = 'Email ou senha incorreta'
+            break
+          case 400:
+            if (data.error === 'Wrong password') {
+              errorMessage = 'Email ou senha incorreta'
+            }
+            break
+          case 401:
+            errorMessage = 'Email ou senha incorreta'
+            break
+          default:
+            console.error('Erro detalhado:', err.response)
+        }
+      }
+
+      toast.error(errorMessage, {
+        position: 'bottom-right',
+        theme: 'dark',
+        closeOnClick: true,
+      })
     } finally {
       setIsLoading(false)
     }
