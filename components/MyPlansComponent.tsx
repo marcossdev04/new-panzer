@@ -22,11 +22,11 @@ export function MyPlansComponent() {
           Meus Planos
         </div>
       </div>
-      <div className="mt-10 grid grid-cols-2 gap-6">
+      <div className="mt-10 grid grid-cols-2 mobile:grid-cols-1 gap-6">
         {user?.products.map((plan, index) => {
           return (
             <Card key={index} className="bg-[#25232B]">
-              <CardContent className="flex justify-between p-4">
+              <CardContent className="flex justify-between p-4 mobile:flex-col">
                 <div className="flex flex-col justify-between gap-3">
                   <CardTitle className="text-sm">Plano atual</CardTitle>
                   <div className="text-2xl">{plan.resources.product_name}</div>
@@ -36,13 +36,13 @@ export function MyPlansComponent() {
                     dolor a aliquam ultrices.
                   </div>
                   <div>
-                    <div className="text-[#d2ff00]  text-sm">
+                    <div className="text-[#d2ff00]  mobile:mb-5 text-sm">
                       Expira 17 de dezembro de 2024
                     </div>
                   </div>
                 </div>
                 <div className="flex items-end min-w-[170px]">
-                  <div className="text-[11px] bg-[#d2ff00] hover:bg-opacity-80 transition-colors duration-300 px-3 py-2 rounded-sm text-black">
+                  <div className="text-[11px] bg-[#d2ff00] mobile:w-full mobile:text-center hover:bg-opacity-80 transition-colors duration-300 px-3 py-2 rounded-sm text-black">
                     CONFIRA OUTROS PLANOS
                   </div>
                 </div>

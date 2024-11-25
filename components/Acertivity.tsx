@@ -22,7 +22,7 @@ export function Assertiveness({ hitHate }: Props) {
   // Atualiza os dados dinamicamente
   const chartData = [
     { browser: 'chrome', AS: hitRate, fill: 'url(#gradientFill)' }, // Gradiente para Chrome
-    { browser: 'complement', AS: complement, fill: 'rgba(0, 0, 0, 0.5)' }, // Preto com opacidade 50%
+    { browser: 'complement', AS: complement, fill: 'rgba(0, 0, 0, 0.2)' }, // Preto com opacidade 50%
   ]
 
   return (

@@ -38,12 +38,23 @@ export const LoginForm = () => {
   }
 
   return (
-    <div className="flex max-w-[1100px] gap-28 mx-auto">
-      <div className="flex flex-col items-center  ">
+    <div className="flex max-w-[1100px] mobile:max-w-[350px] gap-28 mobile:gap-0 mx-auto">
+      <div className="flex flex-col mobile:z-20 items-center">
         <div>
-          <Image src={logotipo} width={350} alt="logotipo" />
+          <Image
+            src={logotipo}
+            width={250}
+            alt="logotipo"
+            className="desktop:hidden laptop:hidden tablet:hidden"
+          />
+          <Image
+            src={logotipo}
+            width={350}
+            alt="logotipo"
+            className="mobile:hidden"
+          />
         </div>
-        <div className="bg-[#1E1E27] bg-opacity-50 px-14 py-6 rounded-xl w-full">
+        <div className="bg-[#1E1E27] bg-opacity-50 px-14 mobile:px-5 py-6 rounded-xl w-full">
           <div className="text-[1.7rem] mb-4">Entrar</div>
           <div className="text-[14px]">Faça login para acessar sua conta</div>
           <form
@@ -107,7 +118,7 @@ export const LoginForm = () => {
         </div>
       </div>
       <Image
-        className="-mt-40 -z-10"
+        className="-mt-40 -z-10 mobile:absolute mobile:z-0 mobile:-bottom-4 mobile:left-2"
         src={jogador}
         width={500}
         height={700}

@@ -16,6 +16,15 @@ import { PanzerPlan, useFilter } from '@/Store/useFilter'
 import { api } from '@/api/api'
 import { useQuery } from 'react-query'
 import { User } from '@/types/User'
+import { Label } from '@/components/ui/label'
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from '@/components/ui/sheet'
+import { Menu } from 'lucide-react'
 
 export function Header() {
   const { userPlan, setUserPlan } = useFilter()
@@ -66,11 +75,11 @@ export function Header() {
   }, [pathname])
 
   return (
-    <div className="flex items-center w-full justify-between rounded-b-[32px] border-t-0 border h-[86px] px-8 border-[#D2FD01]">
+    <div className="flex items-center w-full justify-between rounded-b-[32px] border-t-0 border h-[86px] px-4 sm:px-8 border-[#D2FD01]">
       <Link href={'/home'}>
-        <Image src={logo} alt="logo" />
+        <Image src={logo} alt="logo" className="w-52" />
       </Link>
-      <div className="flex gap-10 items-center">
+      <div className="flex gap-10 items-center mobile:hidden">
         <NavigationMenu>
           <NavigationMenuList>
             <NavigationMenuItem>
@@ -121,7 +130,7 @@ export function Header() {
         </Link>
       </div>
 
-      <NavigationMenu>
+      <NavigationMenu className="mobile:hidden">
         <NavigationMenuList>
           <NavigationMenuItem>
             <NavigationMenuTrigger>Bem vindo, Marcos</NavigationMenuTrigger>
@@ -139,6 +148,83 @@ export function Header() {
           </NavigationMenuItem>
         </NavigationMenuList>
       </NavigationMenu>
+
+      <Sheet>
+        <SheetTrigger className="desktop:hidden laptop:hidden tablet:hidden">
+          <Menu className="w-6 h-6" />
+        </SheetTrigger>
+        <SheetContent className="w-[300px] sm:w-[300px]">
+          <SheetHeader>
+            <SheetTitle className="text-left">Menu</SheetTitle>
+          </SheetHeader>
+
+          <div className="flex flex-col gap-6 mt-6">
+            {/* Seletor de Plano */}
+            <div className="flex flex-col gap-2">
+              <Label>Plano Atual</Label>
+              <select
+                value={userPlan}
+                onChange={(e) => handlePlanChange(e.target.value)}
+                className="w-full p-2 rounded-md bg-background border border-input"
+              >
+                {user?.products.map((product, index) => (
+                  <option
+                    key={index}
+                    value={product.resources.product_name}
+                    className={
+                      userPlan ===
+                      formatPlanName(product.resources.product_name)
+                        ? 'text-[#D2FD01]'
+                        : ''
+                    }
+                  >
+                    {product.resources.product_name}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            {/* Links de Navegação */}
+            <div className="flex flex-col gap-4">
+              <Link
+                href={'/plans'}
+                className={`${path === '/plans' ? 'text-[#D2FD01]' : ''} hover:text-[#D2FD01] transition-colors duration-300`}
+              >
+                Meu Plano
+              </Link>
+              <Link
+                href={'/suport'}
+                className={`${path === '/suport' ? 'text-[#D2FD01]' : ''} hover:text-[#D2FD01] transition-colors duration-300`}
+              >
+                Suporte
+              </Link>
+              <Link
+                href={'/tutorials'}
+                className={`${path === '/tutorials' ? 'text-[#D2FD01]' : ''} hover:text-[#D2FD01] transition-colors duration-300`}
+              >
+                Tutoriais
+              </Link>
+            </div>
+
+            <div className="border-t border-border pt-4">
+              <div className="flex flex-col gap-4">
+                <div className="text-sm text-muted-foreground">
+                  Bem vindo, Marcos
+                </div>
+                <Link
+                  href="/profile"
+                  className="hover:text-[#D2FD01] transition-colors duration-200"
+                >
+                  Perfil
+                </Link>
+                <button className="text-left hover:text-[#D2FD01] transition-colors duration-200">
+                  Logout
+                </button>
+              </div>
+            </div>
+          </div>
+        </SheetContent>
+      </Sheet>
     </div>
   )
 }

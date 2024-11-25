@@ -6,7 +6,7 @@ import { Highlights } from '@/components/HighLights'
 import { Recomendations } from '@/components/Recomendations'
 export default function Home() {
   return (
-    <div className="max-w-[1200px] mx-auto gap-10 flex flex-col">
+    <div className="max-w-[1200px] mobile:overflow-x-hidden mx-auto gap-10 flex flex-col">
       <div>
         <Header />
       </div>

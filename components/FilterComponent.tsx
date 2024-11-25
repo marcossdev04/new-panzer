@@ -2,13 +2,20 @@ import { SlidersHorizontal } from 'lucide-react'
 import { Dialog, DialogContent, DialogTitle, DialogTrigger } from './ui/dialog'
 import { Label } from './ui/label'
 import { useFilter, FILTER_OPTIONS } from '@/Store/useFilter'
-import React, { useMemo, useState } from 'react'
+import React, { useMemo, useState, useEffect } from 'react'
 import { Checkbox } from './ui/checkbox'
 import moment from 'moment'
 import { Input } from './ui/input'
 import { Slider } from './ui/slider'
-import { Select, SelectContent, SelectTrigger, SelectValue } from './ui/select'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from './ui/select'
 import { useVirtualizer } from '@tanstack/react-virtual'
+import { addDays, addMonths } from 'date-fns'
 
 interface FilterOption {
   label: string
@@ -16,6 +23,14 @@ interface FilterOption {
   options: Array<{ label: string; value: string }>
   placeholder: string
 }
+
+const dateRangeOptions = [
+  { value: '1d', label: '1 dia' },
+  { value: '3d', label: '3 dias' },
+  { value: '7d', label: '7 dias' },
+  { value: '1m', label: '1 mês' },
+  { value: '3m', label: '3 meses' },
+] as const
 
 export function FilterComponent() {
   const {
@@ -29,6 +44,7 @@ export function FilterComponent() {
   const [open, setOpen] = useState(false)
   const [openSelect, setOpenSelect] = useState<string | null>(null)
   const [searchTerms, setSearchTerms] = useState<Record<string, string>>({})
+  const [selectedRange, setSelectedRange] = useState<string>('')
 
   const commonFilters: FilterOption[] = [
     {
@@ -75,6 +91,48 @@ export function FilterComponent() {
     },
   ]
 
+  const handleDateRangeChange = (value: string) => {
+    const endDate = new Date()
+    let startDate: Date
+
+    switch (value) {
+      case '1d':
+        startDate = addDays(endDate, -1)
+        break
+      case '3d':
+        startDate = addDays(endDate, -3)
+        break
+      case '7d':
+        startDate = addDays(endDate, -7)
+        break
+      case '1m':
+        startDate = addMonths(endDate, -1)
+        break
+      case '3m':
+        startDate = addMonths(endDate, -3)
+        break
+      default:
+        return
+    }
+
+    setSelectedRange(value)
+    updateTempFilter('startDate', moment(startDate).format('DD/MM/YY'))
+    updateTempFilter('endDate', moment(endDate).format('DD/MM/YY'))
+  }
+
+  useEffect(() => {
+    const start = moment(tempFilters.startDate, 'DD/MM/YY')
+    const end = moment(tempFilters.endDate, 'DD/MM/YY')
+    const diffDays = end.diff(start, 'days')
+
+    if (diffDays === 1) setSelectedRange('1d')
+    else if (diffDays === 3) setSelectedRange('3d')
+    else if (diffDays === 7) setSelectedRange('7d')
+    else if (diffDays === 30) setSelectedRange('1m')
+    else if (diffDays === 90) setSelectedRange('3m')
+    else setSelectedRange('')
+  }, [tempFilters.startDate, tempFilters.endDate])
+
   const handleDateChange = (field: 'startDate' | 'endDate', value: string) => {
     const formattedDate = value ? moment(value).format('DD/MM/YY') : ''
     updateTempFilter(field, formattedDate)
@@ -108,7 +166,6 @@ export function FilterComponent() {
       option.label.toLowerCase().includes(searchTerm),
     )
   }
-
   const VirtualizedOptions = ({ filter }: { filter: FilterOption }) => {
     const filteredOptions = useMemo(
       () => getFilteredOptions(filter),
@@ -124,6 +181,7 @@ export function FilterComponent() {
       estimateSize: () => 35,
       overscan: 5,
     })
+
     return (
       <div ref={parentRef} className="h-72 overflow-auto">
         <div
@@ -176,16 +234,40 @@ export function FilterComponent() {
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger className="border border-white px-3 py-1 rounded-md text-xl flex items-center gap-3">
+      <DialogTrigger className="border border-white mobile:text-xs px-3 py-1 mobile:py-2 rounded-md text-xl flex items-center gap-3">
         <div>Filtros</div>
         <div>
-          <SlidersHorizontal size={20} />
+          <SlidersHorizontal className="mobile:hidden" size={20} />
+          <SlidersHorizontal
+            className="desktop:hidden laptop:hidden tablet:hidden"
+            size={16}
+          />
         </div>
       </DialogTrigger>
-      <DialogContent className="h-2/3 px-5">
+      <DialogContent className="h-2/3 mobile:max-w-[350px] px-5">
         <DialogTitle>Filtros</DialogTitle>
         <div className="overflow-auto h-[100%] px-2">
           <div className="flex flex-col gap-6 w-full">
+            {/* Date Range Select */}
+            <div className="flex flex-col w-full gap-1">
+              <Label className="text-base">Período</Label>
+              <Select
+                value={selectedRange}
+                onValueChange={handleDateRangeChange}
+              >
+                <SelectTrigger className="w-full">
+                  <SelectValue placeholder="Selecione um período" />
+                </SelectTrigger>
+                <SelectContent>
+                  {dateRangeOptions.map((option) => (
+                    <SelectItem key={option.value} value={option.value}>
+                      {option.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+
             {/* Date Controls */}
             <div className="flex flex-col w-full gap-1">
               <Label className="text-base">Data inicial</Label>
@@ -209,8 +291,8 @@ export function FilterComponent() {
                 )}
               />
             </div>
-            {/* Probability Green Dev Range */}
-            {/* Probability Green Range */}
+
+            {/* Probability Ranges */}
             <div className="space-y-4">
               <Label>Probabilidade Green (Min-Max)</Label>
               <div className="flex items-center gap-4">
@@ -233,58 +315,7 @@ export function FilterComponent() {
               </div>
             </div>
 
-            {/* Probability Green Dev Range */}
-            <div className="space-y-4">
-              <Label>Probabilidade Green Dev (Min-Max)</Label>
-              <div className="flex items-center gap-4">
-                <Slider
-                  min={0}
-                  max={100}
-                  step={1}
-                  value={[
-                    tempFilters.probGreenDevMin,
-                    tempFilters.probGreenDevMax,
-                  ]}
-                  onValueChange={([min, max]) => {
-                    updateTempFilter('probGreenDevMin', min)
-                    updateTempFilter('probGreenDevMax', max)
-                  }}
-                  className="relative flex items-center select-none touch-none w-full transition-colors"
-                  thumbClassName="block h-5 w-5 rounded-full border-2 border-primary bg-background ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50"
-                  rangeClassName="absolute h-2 rounded-full bg-primary"
-                />
-                <div className="min-w-[90px] text-sm">
-                  {tempFilters.probGreenDevMin}% - {tempFilters.probGreenDevMax}
-                  %
-                </div>
-              </div>
-            </div>
-
-            {/* Odd Range */}
-            <div className="space-y-4">
-              <Label>Odd (Min-Max)</Label>
-              <div className="flex items-center gap-4">
-                <Slider
-                  min={1}
-                  max={5}
-                  step={0.01}
-                  value={[tempFilters.oddMin, tempFilters.oddMax]}
-                  onValueChange={([min, max]) => {
-                    updateTempFilter('oddMin', min)
-                    updateTempFilter('oddMax', max)
-                  }}
-                  className="relative flex items-center select-none touch-none w-full transition-colors"
-                  thumbClassName="block h-5 w-5 rounded-full border-2 border-primary bg-background ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50"
-                  rangeClassName="absolute h-2 rounded-full bg-primary"
-                />
-                <div className="min-w-[90px] text-sm">
-                  {tempFilters.oddMin.toFixed(2)} -{' '}
-                  {tempFilters.oddMax.toFixed(2)}
-                </div>
-              </div>
-            </div>
-
-            {/* Other filters with search */}
+            {/* Other filters */}
             {commonFilters.map((filter) => (
               <div key={filter.value} className="flex flex-col gap-2">
                 <Label>{filter.label}</Label>
@@ -344,7 +375,10 @@ export function FilterComponent() {
         </div>
         <div className="flex justify-end gap-4 items-center">
           <button
-            onClick={clearTempFilters}
+            onClick={() => {
+              clearTempFilters()
+              setSelectedRange('')
+            }}
             className="text-[#F94E63] underline"
           >
             Redefinir

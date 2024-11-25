@@ -10,6 +10,7 @@ import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import background from '@/assets/background.png'
 import { FilterProvider } from '@/Store/useFilter'
+import { usePathname } from 'next/navigation'
 
 const bai = Bai_Jamjuree({
   weight: '700',
@@ -21,13 +22,14 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode
 }>) {
+  const path = usePathname()
   return (
     <html lang="en">
       <body
         style={{
           backgroundImage: `url(${background.src})`,
         }}
-        className={`${bai.className} antialiased, bg-cover`}
+        className={`${bai.className} antialiased,  laptop:bg-cover mobile:bg-center desktop:bg-cover tablet:bg-cover ${path === '/' ? 'mobile:px-0' : path === '/register' ? 'mobile:px-0' : 'mobile:px-5'}`}
       >
         <ThemeProvider
           attribute="class"

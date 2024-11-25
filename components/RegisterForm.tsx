@@ -11,6 +11,7 @@ import { AiFillEye, AiFillEyeInvisible } from 'react-icons/ai'
 import { useAuth } from '@/Store/useAuth'
 import Image from 'next/image'
 import logotipo from '@/assets/logotipo.svg'
+import Link from 'next/link'
 
 const RegisterSchema = z.object({
   name: z.string(),
@@ -40,14 +41,29 @@ export const RegisterForm = () => {
   }
 
   return (
-    <div className="flex max-w-[1100px] gap-28 mx-auto">
-      <div className="flex flex-col items-center  ">
+    <div className="flex max-w-[1100px] mobile:max-w-[350px] mobile:gap-0 gap-28 mx-auto">
+      <div className="flex flex-col items-center mobile:z-10  ">
         <div>
-          <Image src={logotipo} width={350} alt="logotipo" />
+          <Link href={'/'}>
+            <Image
+              src={logotipo}
+              width={350}
+              alt="logotipo"
+              className="mobile:hidden"
+            />
+          </Link>
+          <Link href={'/'}>
+            <Image
+              src={logotipo}
+              width={250}
+              alt="logotipo"
+              className="laptop:hidden tablet:hidden desktop:hidden"
+            />
+          </Link>
         </div>
-        <div className="bg-[#1E1E27] bg-opacity-50 px-14 py-6 rounded-xl w-full">
-          <div className="text-[1.7rem] mb-4">Entrar</div>
-          <div className="text-[14px]">Faça login para acessar sua conta</div>
+        <div className="bg-[#1E1E27] bg-opacity-50 px-14 mobile:px-5 py-6 rounded-xl w-full">
+          <div className="text-[1.7rem] mb-4">Registrar</div>
+          <div className="text-[14px]">Cadastre-se e começe a lucrar</div>
           <form
             onSubmit={handleSubmit(onSubmit)}
             className="space-y-4 py-8 w-[310px]"
@@ -121,7 +137,7 @@ export const RegisterForm = () => {
         </div>
       </div>
       <Image
-        className="-mt-40 -z-10"
+        className="-mt-40 -z-10 mobile:z-0 mobile:absolute mobile:-bottom-4 mobile:right-0"
         src={jogador}
         width={500}
         height={700}

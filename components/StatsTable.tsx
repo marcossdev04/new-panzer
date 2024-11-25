@@ -77,10 +77,10 @@ const tableOptions = {
     label: 'Ligas',
     headers: [
       { label: 'Liga', key: 'league_name', cols: 4, sortable: true },
-      { label: 'Recomendações', key: 'recommend', cols: 2, sortable: true },
+      { label: 'Tips', key: 'recommend', cols: 2, sortable: true },
       { label: 'Green', key: 'quantityGreen', cols: 1, sortable: true },
       { label: 'Red', key: 'quantityRed', cols: 1, sortable: true },
-      { label: 'Assertividade', key: 'assertiveness', cols: 2, sortable: true },
+      { label: '%', key: 'assertiveness', cols: 2, sortable: true },
       { label: 'Lucro', key: 'profit', cols: 2, sortable: true },
     ],
   },
@@ -238,7 +238,7 @@ export function StatsTable() {
         style={{
           backgroundImage: `url(${bgStats.src})`,
         }}
-        className="w-[510px] h-[233px] relative"
+        className="w-[510px] mobile:w-[350px] mobile:rounded-lg  h-[233px] relative"
       >
         <div className="flex flex-col items-start gap-4 max-w-[230px] p-8">
           <div className="bg-[#D2FD01] flex w-fit p-1 rounded-lg">
@@ -248,14 +248,14 @@ export function StatsTable() {
           <div className="text-base text-[#D2FD01] underline">Explorar</div>
         </div>
       </DialogTrigger>
-      <DialogContent className="max-w-[1200px] px-4 max-h-[90vh] overflow-auto">
+      <DialogContent className="max-w-[1200px] mobile:max-w-[350px] px-4 max-h-[90vh] overflow-auto">
         <div className="flex justify-between items-center mb-4 pr-5">
           <DialogTitle>Estatísticas</DialogTitle>
           <Select
             value={tableType}
             onValueChange={(value: TableType) => setTableType(value)}
           >
-            <SelectTrigger className="w-[200px]">
+            <SelectTrigger className="w-[200px] mobile:w-[150px]">
               <SelectValue placeholder="Selecione o tipo" />
             </SelectTrigger>
             <SelectContent>
@@ -268,18 +268,18 @@ export function StatsTable() {
           </Select>
         </div>
         <div>
-          <div className="bg-gradient-to-r text-black from-[#D2FF00] py-3 to-[#58d764] w-full grid grid-cols-12">
+          <div className="bg-gradient-to-r mobile:text-[8px] text-black from-[#D2FF00] py-3 to-[#58d764] w-full grid grid-cols-12">
             {tableOptions[tableType].headers.map((header) => (
               <div
                 key={header.key}
-                className={`${header.cols === 4 ? 'col-span-4' : header.cols === 3 ? 'col-span-3' : header.cols === 2 ? 'col-span-2' : 'col-span-1'} flex justify-center items-center gap-1 ${
+                className={`${header.cols === 4 ? 'col-span-4' : header.cols === 3 ? 'col-span-3' : header.cols === 2 ? 'col-span-2' : 'col-span-1'} flex justify-center items-center gap-1 mobile:gap-0 ${
                   header.sortable ? 'cursor-pointer' : ''
                 }`}
                 onClick={() => header.sortable && handleSort(header.key)}
               >
                 {header.label}
                 {header.sortable && (
-                  <span className="flex flex-col">
+                  <span className="flex flex-col mobile:hidden">
                     <ChevronUp
                       size={12}
                       className={
@@ -310,20 +310,20 @@ export function StatsTable() {
               {paginatedData.map((item, index) => (
                 <div
                   key={index}
-                  className="bg-[#3B3A40] py-2 w-full grid grid-cols-12"
+                  className="bg-[#3B3A40] mobile:text-[8px] py-2 w-full grid grid-cols-12"
                 >
                   {tableOptions[tableType].headers.map((header) => {
                     // Determina o colspan baseado no tipo da tabela e na coluna
                     return (
                       <div
                         key={header.key}
-                        className={`${header.cols === 4 ? 'col-span-4' : header.cols === 3 ? 'col-span-3' : header.cols === 2 ? 'col-span-2' : 'col-span-1'} flex justify-center truncate w-full `}
+                        className={`${header.cols === 4 ? 'col-span-4' : header.cols === 3 ? 'col-span-3' : header.cols === 2 ? 'col-span-2' : 'col-span-1'} flex justify-center mobile:text-center mobile:items-center w-full `}
                       >
                         {typeof item[header.key as keyof typeof item] ===
                         'number'
                           ? Number(
                               item[header.key as keyof typeof item],
-                            ).toFixed(2)
+                            ).toFixed(1)
                           : item[header.key as keyof typeof item]}
                       </div>
                     )
@@ -332,7 +332,7 @@ export function StatsTable() {
               ))}
             </div>
           )}
-          <div className="flex justify-end gap-4 mt-4">
+          <div className="flex justify-end mobile:justify-center gap-4 mt-4">
             <Button
               onClick={handlePreviousPage}
               disabled={pagination.actualPage === 1}
@@ -340,7 +340,7 @@ export function StatsTable() {
             >
               Anterior
             </Button>
-            <span className="py-2">
+            <span className="py-2 mobile:text-xs">
               Página {pagination.actualPage} de {pagination.totalPages}
             </span>
             <Button

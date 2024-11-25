@@ -154,13 +154,27 @@ export function FilterProvider({ children }: { children: ReactNode }) {
   })
 
   const getUserPlan = (user?: User): PanzerPlan | undefined => {
+    // Se já tiver um plano selecionado no localStorage, retorna ele
     if (currentPlan) return currentPlan
 
-    if (!user?.products) return undefined
+    // Se não tiver usuário, retorna undefined
+    if (!user) return undefined
 
+    // Verifica se tem products e se o array não está vazio
+    if (
+      !user.products ||
+      !Array.isArray(user.products) ||
+      user.products.length <= 0
+    ) {
+      return undefined
+    }
+
+    // Procura por um produto ativo
     const activeProduct = user.products.find(
       (product) => product.status === 'active',
     )
+
+    // Se não encontrar produto ativo, retorna undefined
     if (!activeProduct) return undefined
 
     const productName = activeProduct.resources.product_name.toLowerCase()
@@ -202,6 +216,7 @@ export function FilterProvider({ children }: { children: ReactNode }) {
   }, [])
 
   const userPlan = getUserPlan(user)
+  console.log(userPlan)
 
   const updateTempFilter = (field: keyof FilterState, value: any) => {
     setTempFilters((prevState) => ({

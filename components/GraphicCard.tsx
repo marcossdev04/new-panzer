@@ -96,7 +96,7 @@ export function GraphicCard() {
         style={{
           backgroundImage: `url(${bgChart.src})`,
         }}
-        className="w-[510px] h-[233px] relative"
+        className="w-[510px] mobile:w-[350px] mobile:rounded-lg h-[233px] relative"
       >
         <div className="flex flex-col items-start gap-4 max-w-[230px] p-8">
           <div className="bg-[#D2FD01] flex w-fit p-1 rounded-lg">
@@ -106,14 +106,14 @@ export function GraphicCard() {
           <div className="text-base text-[#D2FD01] underline">Explorar</div>
         </div>
       </DialogTrigger>
-      <DialogContent className="max-w-[1200px]">
+      <DialogContent className="max-w-[1200px] mobile:max-w-[350px]">
         <DialogTitle>Gráficos</DialogTitle>
         <div className="flex gap-4 mb-4">
           <Select
             value={chartType}
             onValueChange={(value: ChartType) => setChartType(value)}
           >
-            <SelectTrigger className="w-[200px]">
+            <SelectTrigger className="w-[200px] mobile:w-[140px]">
               <SelectValue placeholder="Selecione o tipo de gráfico" />
             </SelectTrigger>
             <SelectContent>
@@ -125,7 +125,7 @@ export function GraphicCard() {
             </SelectContent>
           </Select>
           <Select value={timeRange} onValueChange={setTimeRange}>
-            <SelectTrigger className="w-[160px]">
+            <SelectTrigger className="w-[160px] mobile:w-[140px]">
               <SelectValue placeholder="Últimos 3 meses" />
             </SelectTrigger>
             <SelectContent>
