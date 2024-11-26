@@ -1,4 +1,10 @@
-import { ChartBarIncreasing, ChevronDown, ChevronUp } from 'lucide-react'
+import {
+  ChartBarIncreasing,
+  ChevronDown,
+  ChevronUp,
+  LockKeyholeIcon,
+  UnlockKeyholeIcon,
+} from 'lucide-react'
 import { Dialog, DialogContent, DialogTitle, DialogTrigger } from './ui/dialog'
 import bgStats from '@/assets/backgroundStatistics.png'
 import { useQuery } from 'react-query'
@@ -12,6 +18,7 @@ import {
   SelectValue,
 } from './ui/select'
 import { api } from '@/api/api'
+import { useFilter } from '@/Store/useFilter'
 
 interface ITableLeague {
   league_name: string
@@ -148,6 +155,7 @@ const tableOptions = {
 } as const
 
 export function StatsTable() {
+  const { userPlan } = useFilter()
   const [dialogOpen, setDialogOpen] = useState(false)
   const [tableType, setTableType] = useState<TableType>('table_leagues')
   const [sortState, setSortState] = useState<SortState>({
@@ -303,7 +311,27 @@ export function StatsTable() {
               </div>
             ))}
           </div>
-          {isLoading ? (
+
+          {userPlan === 'Panzer Novice' ? (
+            <div className="h-[250px] flex gap-3 justify-center items-center">
+              <div className="flex flex-col gap-4">
+                <div className="flex gap-2">
+                  <div>
+                    Funcionalidade desbloqueada apenas para planos Corner e Pro
+                  </div>
+                  <div>
+                    <LockKeyholeIcon size={25} />
+                  </div>
+                </div>
+                <div className="w-2/3 mx-auto bg-gradient-to-r from-[#D2FF00]  hover:bg-opacity-80 to-[#58d764] transition-colors duration-300 py-3 flex gap-2 justify-center rounded-lg text-black">
+                  <div>Desbloquear funcionalidade</div>
+                  <div>
+                    <UnlockKeyholeIcon />
+                  </div>
+                </div>
+              </div>
+            </div>
+          ) : isLoading ? (
             <div className="flex justify-center py-4">Carregando...</div>
           ) : (
             <div className="flex flex-col mt-1 gap-2">

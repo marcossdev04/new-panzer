@@ -22,6 +22,7 @@ interface FilterOption {
   value: string
   options: Array<{ label: string; value: string }>
   placeholder: string
+  placehoder2: string
 }
 
 const dateRangeOptions = [
@@ -39,6 +40,7 @@ export function FilterComponent() {
     clearTempFilters,
     applyFilters,
     filterOptions,
+    userPlan,
   } = useFilter()
 
   const [open, setOpen] = useState(false)
@@ -52,42 +54,49 @@ export function FilterComponent() {
       value: 'country',
       options: filterOptions?.country || [],
       placeholder: 'Pesquisar um país',
+      placehoder2: 'Disponível no plano Corner e Pro',
     },
     {
       label: 'Liga',
       value: 'league',
       options: filterOptions?.league || [],
       placeholder: 'Pesquisar uma liga',
+      placehoder2: 'Disponível no plano Corner e Pro',
     },
     {
       label: 'Aposta',
       value: 'bet',
       options: FILTER_OPTIONS.bet,
       placeholder: 'Pesquisar uma aposta',
+      placehoder2: 'Disponível no plano Corner e Pro',
     },
     {
       label: 'Resultado',
       value: 'result',
       options: FILTER_OPTIONS.result,
       placeholder: 'Pesquisar um resultado',
+      placehoder2: 'Disponível no plano Corner e Pro',
     },
     {
       label: 'Time casa',
       value: 'homeTeam',
       options: filterOptions?.homeTeam || [],
       placeholder: 'Pesquisar um time',
+      placehoder2: 'Disponível no plano Corner e Pro',
     },
     {
       label: 'Time fora',
       value: 'awayTeam',
       options: filterOptions?.awayTeam || [],
       placeholder: 'Pesquisar um time',
+      placehoder2: 'Disponível no plano Corner e Pro',
     },
     {
       label: 'Linha de gol',
       value: 'goalLine',
       options: filterOptions?.gols || [],
       placeholder: 'Pesquisar uma linha',
+      placehoder2: 'Disponível no plano Corner e Pro',
     },
   ]
 
@@ -297,6 +306,7 @@ export function FilterComponent() {
               <Label>Probabilidade Green (Min-Max)</Label>
               <div className="flex items-center gap-4">
                 <Slider
+                  disabled={userPlan === 'Panzer Novice'}
                   min={0}
                   max={100}
                   step={1}
@@ -320,13 +330,20 @@ export function FilterComponent() {
               <div key={filter.value} className="flex flex-col gap-2">
                 <Label>{filter.label}</Label>
                 <Select
+                  disabled={userPlan === 'Panzer Novice'}
                   open={openSelect === filter.value}
                   onOpenChange={(isOpen) =>
                     setOpenSelect(isOpen ? filter.value : null)
                   }
                 >
                   <SelectTrigger className="w-full">
-                    <SelectValue placeholder={filter.placeholder}>
+                    <SelectValue
+                      placeholder={
+                        userPlan === 'Panzer Novice'
+                          ? filter.placehoder2
+                          : filter.placeholder
+                      }
+                    >
                       <div className="flex flex-wrap gap-1">
                         {(
                           tempFilters[

@@ -38,16 +38,6 @@ export function Header() {
   const paramss = getFilterParams()
   const params = { params: paramss }
 
-  // Carregar plano do localStorage ao montar o componente
-  useEffect(() => {
-    if (typeof window !== 'undefined') {
-      const storedPlan = window.localStorage.getItem('userPlan')
-      if (storedPlan) {
-        setUserPlan(storedPlan as PanzerPlan)
-      }
-    }
-  }, [setUserPlan])
-
   async function fetchUserData() {
     const response = await api.get('/users/me', params)
     return response.data
@@ -135,7 +125,9 @@ export function Header() {
       <NavigationMenu className="mobile:hidden">
         <NavigationMenuList>
           <NavigationMenuItem>
-            <NavigationMenuTrigger>Bem vindo, Marcos</NavigationMenuTrigger>
+            <NavigationMenuTrigger>
+              Bem vindo, {user?.name}
+            </NavigationMenuTrigger>
             <NavigationMenuContent className="flex flex-col min-w-[170px] px-5">
               <NavigationMenuLink
                 onClick={() => router.push('/profile')}
@@ -145,7 +137,7 @@ export function Header() {
               </NavigationMenuLink>
               <NavigationMenuLink
                 onClick={() => handleSignOut()}
-                className="py-2 hover:text-[#D2FD01] transition-colors duration-200"
+                className="py-2 cursor-pointer hover:text-[#D2FD01] transition-colors duration-200"
               >
                 Logout
               </NavigationMenuLink>
@@ -224,7 +216,7 @@ export function Header() {
                 </Link>
                 <button
                   onClick={() => handleSignOut()}
-                  className="text-left hover:text-[#D2FD01] transition-colors duration-200"
+                  className="text-left cursor-pointer hover:text-[#D2FD01] transition-colors duration-200"
                 >
                   Logout
                 </button>

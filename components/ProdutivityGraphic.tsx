@@ -10,12 +10,15 @@ import {
 } from './ui/chart'
 import React from 'react'
 import { Graphs } from './GraphicCard'
+import { useFilter } from '@/Store/useFilter'
+import { LockKeyholeIcon, UnlockKeyholeIcon } from 'lucide-react'
 
 interface Props {
   results: Graphs | undefined
   isLoading: boolean | undefined
 }
 export function ProdutivityGraphic({ results, isLoading }: Props) {
+  const { userPlan } = useFilter()
   const chartConfig = {
     visitors: {
       label: 'Visitors',
@@ -54,7 +57,26 @@ export function ProdutivityGraphic({ results, isLoading }: Props) {
         </div>
       </CardHeader>
       <CardContent className="px-2 pt-4 sm:px-6 sm:pt-6">
-        {isLoading ? (
+        {userPlan === 'Panzer Novice' ? (
+          <div className="h-[250px] flex gap-3 justify-center items-center">
+            <div className="flex flex-col gap-4">
+              <div className="flex gap-2">
+                <div>
+                  Funcionalidade desbloqueada apenas para planos Corner e Pro
+                </div>
+                <div>
+                  <LockKeyholeIcon size={25} />
+                </div>
+              </div>
+              <div className="w-2/3 mx-auto bg-[#D2FD01] hover:bg-opacity-80 transition-colors duration-300 py-3 flex gap-2 justify-center rounded-lg text-black">
+                <div>Desbloquear funcionalidade</div>
+                <div>
+                  <UnlockKeyholeIcon />
+                </div>
+              </div>
+            </div>
+          </div>
+        ) : isLoading ? (
           <div className="flex justify-center items-center h-[250px]">
             Carregando...
           </div>

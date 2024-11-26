@@ -56,6 +56,7 @@ export interface FilterContextData {
   tempFilters: FilterState
   updateTempFilter: (field: keyof FilterState, value: any) => void
   clearTempFilters: () => void
+  getUserPlan: (user: User) => void
   applyFilters: () => void
   getFilterParams: () => Record<string, string | undefined | number | boolean>
   filterOptions?: IFilterOptions
@@ -150,23 +151,10 @@ export function FilterProvider({ children }: { children: ReactNode }) {
   }, [])
 
   // Fetch user data and determine plan
-  const { data: user } = useQuery<User>(
-    ['getUser'],
-    async () => {
-      const response = await api.get('/users/me')
-      return response.data
-    },
-    {
-      refetchInterval: 30000, // Refetch a cada 30 segundos
-      refetchIntervalInBackground: true,
-      onSuccess: (data) => {
-        const newPlan = getUserPlan(data)
-        if (newPlan && newPlan !== currentPlan) {
-          setUserPlan(newPlan)
-        }
-      },
-    },
-  )
+  const { data: user } = useQuery<User>(['getUser'], async () => {
+    const response = await api.get('/users/me')
+    return response.data
+  })
 
   const getUserPlan = (user?: User): PanzerPlan | undefined => {
     // Se já tiver um plano selecionado no localStorage, retorna ele
@@ -211,16 +199,8 @@ export function FilterProvider({ children }: { children: ReactNode }) {
 
     return plan
   }
-
+  console.log(user)
   const userPlan = getUserPlan(user)
-  useEffect(() => {
-    if (typeof window !== 'undefined') {
-      // Se tiver um plano, salva no localStorage
-      if (userPlan === 'Sem plano') {
-        localStorage.setItem('userPlan', userPlan)
-      }
-    }
-  }, [userPlan])
 
   const updateTempFilter = (field: keyof FilterState, value: any) => {
     setTempFilters((prevState) => ({
@@ -278,19 +258,11 @@ export function FilterProvider({ children }: { children: ReactNode }) {
 
     return params
   }
-  useEffect(() => {
-    setUserPlan(
-      userPlan === undefined
-        ? 'Sem plano'
-        : userPlan === 'Sem plano'
-          ? 'Sem plano'
-          : userPlan,
-    )
-  }, [userPlan])
 
   return (
     <FilterContext.Provider
       value={{
+        getUserPlan,
         filters,
         tempFilters,
         updateTempFilter,

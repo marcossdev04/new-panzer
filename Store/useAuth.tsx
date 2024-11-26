@@ -125,6 +125,7 @@ export function AuthContextProvider({ children }: AuthContextProviderProps) {
       })
 
       api.defaults.headers.Authorization = `Bearer ${accessToken}`
+
       setIsAuthenticated(true)
       push('/home')
     } catch (err: any) {
