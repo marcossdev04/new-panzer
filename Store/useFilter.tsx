@@ -19,6 +19,7 @@ export type PanzerPlan =
   | 'Panzer Pro'
   | 'Panzer Novice'
   | 'Panzer Corner'
+  | 'Sem plano'
 export interface IOption {
   label: string
   value: string
@@ -115,6 +116,7 @@ export function FilterProvider({ children }: { children: ReactNode }) {
       window.localStorage.setItem('userPlan', newPlan)
     }
   }
+
   const [filterOptions, setFilterOptions] = useState<IFilterOptions>()
 
   useEffect(() => {
@@ -148,10 +150,23 @@ export function FilterProvider({ children }: { children: ReactNode }) {
   }, [])
 
   // Fetch user data and determine plan
-  const { data: user } = useQuery<User>(['getUser'], async () => {
-    const response = await api.get('/users/me')
-    return response.data
-  })
+  const { data: user } = useQuery<User>(
+    ['getUser'],
+    async () => {
+      const response = await api.get('/users/me')
+      return response.data
+    },
+    {
+      refetchInterval: 30000, // Refetch a cada 30 segundos
+      refetchIntervalInBackground: true,
+      onSuccess: (data) => {
+        const newPlan = getUserPlan(data)
+        if (newPlan && newPlan !== currentPlan) {
+          setUserPlan(newPlan)
+        }
+      },
+    },
+  )
 
   const getUserPlan = (user?: User): PanzerPlan | undefined => {
     // Se já tiver um plano selecionado no localStorage, retorna ele
@@ -166,7 +181,7 @@ export function FilterProvider({ children }: { children: ReactNode }) {
       !Array.isArray(user.products) ||
       user.products.length <= 0
     ) {
-      return undefined
+      return 'Sem plano'
     }
 
     // Procura por um produto ativo
@@ -197,26 +212,15 @@ export function FilterProvider({ children }: { children: ReactNode }) {
     return plan
   }
 
-  useEffect(() => {
-    const handleStorageChange = (e: StorageEvent) => {
-      if (e.key === 'userPlan' && e.newValue) {
-        setCurrentPlan(e.newValue as PanzerPlan)
-      }
-    }
-
-    if (typeof window !== 'undefined') {
-      window.addEventListener('storage', handleStorageChange)
-    }
-
-    return () => {
-      if (typeof window !== 'undefined') {
-        window.removeEventListener('storage', handleStorageChange)
-      }
-    }
-  }, [])
-
   const userPlan = getUserPlan(user)
-  console.log(userPlan)
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      // Se tiver um plano, salva no localStorage
+      if (userPlan === 'Sem plano') {
+        localStorage.setItem('userPlan', userPlan)
+      }
+    }
+  }, [userPlan])
 
   const updateTempFilter = (field: keyof FilterState, value: any) => {
     setTempFilters((prevState) => ({
@@ -274,6 +278,15 @@ export function FilterProvider({ children }: { children: ReactNode }) {
 
     return params
   }
+  useEffect(() => {
+    setUserPlan(
+      userPlan === undefined
+        ? 'Sem plano'
+        : userPlan === 'Sem plano'
+          ? 'Sem plano'
+          : userPlan,
+    )
+  }, [userPlan])
 
   return (
     <FilterContext.Provider

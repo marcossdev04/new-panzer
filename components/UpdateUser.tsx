@@ -48,7 +48,6 @@ export function UpdateUser() {
       })
     },
   })
-
   const {
     register,
     handleSubmit,
@@ -65,7 +64,7 @@ export function UpdateUser() {
       confirmPassword: '',
     },
   })
-  console.log(user?.id)
+
   async function onSubmit(data: UpdateUserFormData) {
     try {
       setLoading(true)

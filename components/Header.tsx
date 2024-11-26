@@ -25,8 +25,10 @@ import {
   SheetTrigger,
 } from '@/components/ui/sheet'
 import { Menu } from 'lucide-react'
+import { useAuth } from '@/Store/useAuth'
 
 export function Header() {
+  const { handleSignOut } = useAuth()
   const { userPlan, setUserPlan } = useFilter()
   const router = useRouter()
   const pathname = usePathname()
@@ -141,7 +143,10 @@ export function Header() {
               >
                 Perfil
               </NavigationMenuLink>
-              <NavigationMenuLink className="py-2 hover:text-[#D2FD01] transition-colors duration-200">
+              <NavigationMenuLink
+                onClick={() => handleSignOut()}
+                className="py-2 hover:text-[#D2FD01] transition-colors duration-200"
+              >
                 Logout
               </NavigationMenuLink>
             </NavigationMenuContent>
@@ -209,7 +214,7 @@ export function Header() {
             <div className="border-t border-border pt-4">
               <div className="flex flex-col gap-4">
                 <div className="text-sm text-muted-foreground">
-                  Bem vindo, Marcos
+                  Bem vindo, {user?.name}
                 </div>
                 <Link
                   href="/profile"
@@ -217,7 +222,10 @@ export function Header() {
                 >
                   Perfil
                 </Link>
-                <button className="text-left hover:text-[#D2FD01] transition-colors duration-200">
+                <button
+                  onClick={() => handleSignOut()}
+                  className="text-left hover:text-[#D2FD01] transition-colors duration-200"
+                >
                   Logout
                 </button>
               </div>

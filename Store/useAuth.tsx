@@ -116,7 +116,7 @@ export function AuthContextProvider({ children }: AuthContextProviderProps) {
         email,
         password,
       })
-      console.log(response.data)
+
       const accessToken = response.data.access
       const refreshToken = response.data.refresh
       setCookie('token_panzer_football', accessToken, { maxAge: 60 * 60 })
@@ -167,6 +167,9 @@ export function AuthContextProvider({ children }: AuthContextProviderProps) {
   async function handleSignOut() {
     removeCookie('token_panzer_football')
     removeCookie('refresh_panzer_football')
+    if (typeof window !== 'undefined') {
+      localStorage.clear() // Limpa todo o localStorage
+    }
     api.defaults.headers.Authorization = ''
     setIsAuthenticated(false)
     push('/')
@@ -179,7 +182,7 @@ export function AuthContextProvider({ children }: AuthContextProviderProps) {
         throw new Error('No refresh token available')
       }
 
-      const response = await api.post('/auth/refresh/', {
+      const response = await api.post('/token/refresh/', {
         refresh: refreshToken,
       })
       const newAccessToken = response.data.access
