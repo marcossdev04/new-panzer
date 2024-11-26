@@ -56,14 +56,14 @@ export function MatchesGraphic({ isLoading, matches }: MatchesGraphicProps) {
           <div className="h-[250px] flex gap-3 justify-center items-center">
             <div className="flex flex-col gap-4">
               <div className="flex gap-2">
-                <div>
+              <div className="mobile:text-xs text-center">
                   Funcionalidade desbloqueada apenas para planos Corner e Pro
                 </div>
                 <div>
-                  <LockKeyholeIcon size={25} />
+                <LockKeyholeIcon className='mobile:hidden' size={25} />
                 </div>
               </div>
-              <div className="w-2/3 mx-auto bg-[#D2FD01] hover:bg-opacity-80 transition-colors duration-300 py-3 flex gap-2 justify-center rounded-lg text-black">
+              <div className="w-2/3 mx-auto mobile:w-full bg-[#D2FD01] hover:bg-opacity-80 transition-colors duration-300 py-3 flex gap-2 justify-center rounded-lg text-black">
                 <div>Desbloquear funcionalidade</div>
                 <div>
                   <UnlockKeyholeIcon />
