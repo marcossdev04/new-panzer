@@ -37,6 +37,7 @@ export function Header() {
   const { getFilterParams } = useFilter()
   const paramss = getFilterParams()
   const params = { params: paramss }
+  console.log(params)
 
   async function fetchUserData() {
     const response = await api.get('/users/me', params)

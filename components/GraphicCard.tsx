@@ -18,6 +18,7 @@ import {
 import { ProdutivityGraphic } from './ProdutivityGraphic'
 import { MatchesGraphic } from './MatchesGraphic'
 import { ProfitGraphic } from './ ProfitGraphic'
+import { FilterComponent } from './FilterComponent'
 
 export interface Graphs {
   match_for_date: MatchForDate[]
@@ -32,53 +33,19 @@ const chartTypeOptions = {
   profit: 'Lucro',
 } as const
 
-const timeRangeOptions = {
-  '1d': { label: '1 dia', days: 1 },
-  '3d': { label: '3 dias', days: 3 },
-  '7d': { label: '7 dias', days: 7 },
-  '30d': { label: '1 mês', days: 30 },
-  '90d': { label: '3 meses', days: 90 },
-} as const
-
 export function GraphicCard() {
+  const { getFilterParams } = useFilter()
+  const params = {
+    ...getFilterParams(),
+  }
   const [chartType, setChartType] = React.useState<ChartType>('productivity')
-  const { userPlan } = useFilter()
-  const [timeRange, setTimeRange] = React.useState('30d')
 
   const [dialogOpen, setDialogOpen] = React.useState(false)
 
-  const dateRanges = React.useMemo(() => {
-    const now = new Date()
-    const startDate = new Date(now)
-    startDate.setDate(
-      now.getDate() -
-        timeRangeOptions[timeRange as keyof typeof timeRangeOptions].days,
-    )
-
-    return {
-      startDate: startDate.toISOString().split('T')[0],
-      endDate: now.toISOString().split('T')[0],
-    }
-  }, [timeRange])
-
-  const configFetchGraphics = React.useMemo(
-    () => ({
-      params: {
-        is_filter_hot: userPlan === 'Panzer Pro Hot' ? true : undefined,
-        is_product_pro: userPlan === 'Panzer Pro' ? true : undefined,
-        is_product_novice: userPlan === 'Panzer Novice' ? true : undefined,
-        is_product_corner: userPlan === 'Panzer Corner' ? true : undefined,
-        match_date_after: dateRanges.startDate,
-        match_date_before: dateRanges.endDate,
-      },
-    }),
-    [userPlan, dateRanges],
-  )
-
   const { data: results, isLoading } = useQuery<Graphs>(
-    ['getGraphs', configFetchGraphics],
+    ['getGraphs', params],
     async () => {
-      const response = await api.get('results/pred1x', configFetchGraphics)
+      const response = await api.get('results/pred1x', { params })
       return response.data.graphs
     },
     {
@@ -113,7 +80,7 @@ export function GraphicCard() {
             value={chartType}
             onValueChange={(value: ChartType) => setChartType(value)}
           >
-            <SelectTrigger className="w-[200px] mobile:w-[140px]">
+            <SelectTrigger className="w-[200px] h-10 mobile:w-[140px]">
               <SelectValue placeholder="Selecione o tipo de gráfico" />
             </SelectTrigger>
             <SelectContent>
@@ -124,18 +91,7 @@ export function GraphicCard() {
               ))}
             </SelectContent>
           </Select>
-          <Select value={timeRange} onValueChange={setTimeRange}>
-            <SelectTrigger className="w-[160px] mobile:w-[140px]">
-              <SelectValue placeholder="Últimos 3 meses" />
-            </SelectTrigger>
-            <SelectContent>
-              {Object.entries(timeRangeOptions).map(([value, { label }]) => (
-                <SelectItem key={value} value={value}>
-                  {label}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+          <FilterComponent />
         </div>
         {chartType === 'productivity' ? (
           <ProdutivityGraphic isLoading={isLoading} results={results} />

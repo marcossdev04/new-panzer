@@ -15,7 +15,7 @@ import logotipo from '@/assets/logotipo.svg'
 
 const loginSchema = z.object({
   email: z.string().email('Por favor, insira um e-mail válido'),
-  password: z.string().min(6, 'A senha deve ter pelo menos 6 caracteres'),
+  password: z.string().min(9, 'A senha deve ter pelo menos 9 caracteres'),
 })
 
 type LoginFormData = z.infer<typeof loginSchema>

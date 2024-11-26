@@ -19,12 +19,18 @@ const UpdateUserSchema = z
     email: z.string().email('Por favor, insira um e-mail válido'),
     phone_number: z.string(),
     cpf: z.string(),
-    password: z.string().min(6, 'A senha deve ter pelo menos 6 caracteres'),
+    password: z
+      .string()
+      .min(9, 'A senha deve ter pelo menos 9 caracteres')
+      .regex(
+        /^(?=.*[A-Za-z])(?=.*\d)/,
+        'A senha deve conter pelo menos uma letra e um número',
+      ),
     confirmPassword: z.string(),
   })
   .refine((data) => data.password === data.confirmPassword, {
     message: 'As senhas não correspondem',
-    path: ['confirmPassword'], // path do erro
+    path: ['confirmPassword'],
   })
 type UpdateUserFormData = z.infer<typeof UpdateUserSchema>
 
@@ -195,7 +201,7 @@ export function UpdateUser() {
               Carregando... <FaFutbol className="animate-spin" />
             </div>
           ) : (
-            'Atualizar Perfil'
+            'Atualizar P erfil'
           )}
         </Button>
       </form>

@@ -19,6 +19,7 @@ import {
 } from './ui/select'
 import { api } from '@/api/api'
 import { useFilter } from '@/Store/useFilter'
+import { FilterComponent } from './FilterComponent'
 
 interface ITableLeague {
   league_name: string
@@ -155,6 +156,10 @@ const tableOptions = {
 } as const
 
 export function StatsTable() {
+  const { getFilterParams } = useFilter()
+  const params = {
+    ...getFilterParams(),
+  }
   const { userPlan } = useFilter()
   const [dialogOpen, setDialogOpen] = useState(false)
   const [tableType, setTableType] = useState<TableType>('table_leagues')
@@ -172,7 +177,7 @@ export function StatsTable() {
   const { data, isLoading } = useQuery<{ tables: ITables }>(
     ['stats'],
     async () => {
-      const response = await api.get('results/pred1x')
+      const response = await api.get('results/pred1x', { params })
       return response.data
     },
     {
@@ -258,22 +263,25 @@ export function StatsTable() {
       </DialogTrigger>
       <DialogContent className="max-w-[1200px] mobile:max-w-[350px] px-4 max-h-[90vh] overflow-auto">
         <div className="flex justify-between items-center mb-4 pr-5">
-          <DialogTitle>Estatísticas</DialogTitle>
-          <Select
-            value={tableType}
-            onValueChange={(value: TableType) => setTableType(value)}
-          >
-            <SelectTrigger className="w-[200px] mobile:w-[150px]">
-              <SelectValue placeholder="Selecione o tipo" />
-            </SelectTrigger>
-            <SelectContent>
-              {Object.entries(tableOptions).map(([value, { label }]) => (
-                <SelectItem key={value} value={value}>
-                  {label}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+          <DialogTitle className="mobile:hidden">Estatísticas</DialogTitle>
+          <div className="flex items-center gap-2 mobile:justify-between mobile:w-full">
+            <FilterComponent />
+            <Select
+              value={tableType}
+              onValueChange={(value: TableType) => setTableType(value)}
+            >
+              <SelectTrigger className="w-[200px] h-11 mobile:h-10 mobile:w-[150px]">
+                <SelectValue placeholder="Selecione o tipo" />
+              </SelectTrigger>
+              <SelectContent>
+                {Object.entries(tableOptions).map(([value, { label }]) => (
+                  <SelectItem key={value} value={value}>
+                    {label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
         </div>
         <div>
           <div className="bg-gradient-to-r mobile:text-[8px] text-black from-[#D2FF00] py-3 to-[#58d764] w-full grid grid-cols-12">
@@ -323,7 +331,7 @@ export function StatsTable() {
                     <LockKeyholeIcon className="mobile:hidden" size={25} />
                   </div>
                 </div>
-                <div className="w-2/3 mx-auto bg-gradient-to-r mobile:w-full from-[#D2FF00] hover:bg-opacity-80 to-[#58d764] transition-colors duration-300 py-3 flex gap-2 justify-center rounded-lg text-black">
+                <div className="w-2/3 mx-auto bg-gradient-to-r mobile:w-full mobile:text-sm mobile:items-center from-[#D2FF00] hover:bg-opacity-80 to-[#58d764] transition-colors duration-300 py-3 flex gap-2 justify-center rounded-lg text-black">
                   <div>Desbloquear funcionalidade</div>
                   <div>
                     <UnlockKeyholeIcon />

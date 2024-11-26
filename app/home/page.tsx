@@ -23,9 +23,13 @@ export default function Home() {
       <div>
         <Header />
       </div>
-      <div>
-        <Highlights />
-      </div>
+      {userPlan === 'Panzer Pro Hot' ? (
+        <div>
+          <Highlights />
+        </div>
+      ) : (
+        ''
+      )}
       <div>
         <Recomendations />
       </div>

@@ -199,7 +199,6 @@ export function FilterProvider({ children }: { children: ReactNode }) {
 
     return plan
   }
-  console.log(user)
   const userPlan = getUserPlan(user)
 
   const updateTempFilter = (field: keyof FilterState, value: any) => {
@@ -244,7 +243,7 @@ export function FilterProvider({ children }: { children: ReactNode }) {
       probability_green_max: filters.probGreenMax,
       probability_green_devolution_min: filters.probGreenDevMin,
       probability_green_devolution_max: filters.probGreenDevMax,
-      is_filter_hot: userPlan === 'Panzer Pro Hot',
+      is_filter_hot: userPlan === 'Panzer Pro Hot' ? true : undefined,
       is_product_pro: userPlan === 'Panzer Pro' || undefined,
       is_product_novice: userPlan === 'Panzer Novice' ? true : undefined,
       is_product_corner: userPlan === 'Panzer Corner' ? true : undefined,

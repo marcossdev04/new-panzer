@@ -101,11 +101,16 @@ export function AuthContextProvider({ children }: AuthContextProviderProps) {
     } catch (err: any) {
       console.log(err)
       setIsLoading(false)
-      toast.error('Não foi possível fazer a criação da conta.', {
-        position: 'bottom-right',
-        theme: 'dark',
-        closeOnClick: true,
-      })
+      toast.error(
+        err.response.data.non_field_errors === 'This password is too common.'
+          ? 'Senha fraca'
+          : 'Não foi possível fazer a criação da conta.',
+        {
+          position: 'bottom-right',
+          theme: 'dark',
+          closeOnClick: true,
+        },
+      )
     }
   }
 
