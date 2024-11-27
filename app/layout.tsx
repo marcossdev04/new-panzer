@@ -13,6 +13,9 @@ import { FilterProvider } from '@/Store/useFilter'
 import { usePathname } from 'next/navigation'
 import { useCookies } from 'react-cookie'
 import { useEffect } from 'react'
+import { DayPickerProvider } from 'react-day-picker'
+import 'react-day-picker/dist/style.css'
+import { ptBR } from 'date-fns/locale/pt-BR'
 
 const bai = Bai_Jamjuree({
   weight: '700',
@@ -63,7 +66,16 @@ export default function RootLayout({
           <QueryClientProvider client={queryClient}>
             <AuthContextProvider>
               <FilterProvider>
-                <AuthCheck>{children}</AuthCheck>
+                <DayPickerProvider
+                  initialProps={{
+                    mode: 'single',
+                    locale: ptBR, // Usando o locale importado
+                    weekStartsOn: 1,
+                    showOutsideDays: true,
+                  }}
+                >
+                  <AuthCheck>{children}</AuthCheck>
+                </DayPickerProvider>
               </FilterProvider>
             </AuthContextProvider>
             <ToastContainer />

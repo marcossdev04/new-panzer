@@ -124,9 +124,9 @@ export function AuthContextProvider({ children }: AuthContextProviderProps) {
 
       const accessToken = response.data.access
       const refreshToken = response.data.refresh
-      setCookie('token_panzer_football', accessToken, { maxAge: 60 * 60 })
+      setCookie('token_panzer_football', accessToken, { maxAge: 60 * 30 })
       setCookie('refresh_panzer_football', refreshToken, {
-        maxAge: 60 * 60 * 24,
+        maxAge: 60 * 60 * 12,
       })
 
       api.defaults.headers.Authorization = `Bearer ${accessToken}`

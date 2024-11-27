@@ -1,5 +1,6 @@
 'use client'
 import { Cards } from '@/components/Cards'
+import { Footer } from '@/components/Footer'
 import { Games } from '@/components/Games'
 import { Header } from '@/components/Header'
 import { Highlights } from '@/components/HighLights'
@@ -38,6 +39,9 @@ export default function Home() {
       </div>
       <div>
         <Games />
+      </div>
+      <div>
+        <Footer />
       </div>
     </div>
   )
