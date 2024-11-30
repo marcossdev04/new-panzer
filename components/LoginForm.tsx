@@ -38,7 +38,7 @@ export const LoginForm = () => {
   }
 
   return (
-    <div className="flex max-w-[1100px] mobile:max-w-[350px] gap-28 mobile:gap-0 mx-auto">
+    <div className="flex max-w-[1100px] mobile:overflow-y-hidden mobile:max-w-[350px] gap-28 mobile:gap-0 mx-auto">
       <div className="flex flex-col mobile:z-20 items-center">
         <div>
           <Image

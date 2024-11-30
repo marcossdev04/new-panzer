@@ -48,7 +48,7 @@ export const RegisterForm = () => {
   }
 
   return (
-    <div className="flex max-w-[1100px] mobile:max-w-[350px] mobile:gap-0 gap-28 mx-auto">
+    <div className="flex max-w-[1100px] mobile:overflow-y-hidden mobile:max-w-[350px] mobile:gap-0 gap-28 mx-auto">
       <div className="flex flex-col items-center mobile:z-10  ">
         <div>
           <Link href={'/'}>

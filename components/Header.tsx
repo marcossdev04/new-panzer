@@ -73,6 +73,12 @@ export function Header() {
         <Image src={logo} alt="logo" className="w-52" />
       </Link>
       <div className="flex gap-10 items-center mobile:hidden">
+        <Link
+          className={`${path === '/home' ? 'text-[#D2FD01]' : ''} hover:text-[#D2FD01] transition-colors duration-300`}
+          href={'/home'}
+        >
+          Home
+        </Link>
         <NavigationMenu>
           <NavigationMenuList>
             <NavigationMenuItem>
@@ -157,6 +163,12 @@ export function Header() {
           </SheetHeader>
 
           <div className="flex flex-col gap-6 mt-6">
+            <Link
+              className={`${path === '/home' ? 'text-[#D2FD01]' : ''} hover:text-[#D2FD01] transition-colors duration-300`}
+              href={'/home'}
+            >
+              Home
+            </Link>
             {/* Seletor de Plano */}
             <div className="flex flex-col gap-2">
               <Label>Plano Atual</Label>

@@ -66,15 +66,15 @@ export interface FilterContextData {
 
 export const FILTER_OPTIONS = {
   bet: [
-    { label: 'Over', value: 'Over' },
-    { label: 'Under', value: 'Under' },
-    { label: 'All', value: 'All' },
+    { label: 'Mais que', value: 'Over' },
+    { label: 'Menos que', value: 'Under' },
+    { label: 'Todos', value: 'All' },
   ],
   result: [
-    { label: 'Win', value: 'Win' },
-    { label: 'Lose', value: 'Lose' },
-    { label: 'Returned', value: 'Returned' },
-    { label: 'Canceled', value: 'Canceled' },
+    { label: 'Ganho', value: 'Win' },
+    { label: 'Perdido', value: 'Lose' },
+    { label: 'Devolvido', value: 'Returned' },
+    { label: 'Cancelado', value: 'Canceled' },
   ],
 } satisfies Record<string, readonly IOption[]>
 

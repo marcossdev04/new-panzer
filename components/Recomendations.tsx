@@ -184,7 +184,14 @@ export function Recomendations() {
           <Assertiveness hitHate={results?.hit_rate} />
         </div>
       </div>
-      <Card className="laptop:hidden bg-[#25232B] p-3 mt-2 desktop:hidden tablet:hidden">
+      <Card
+        style={{
+          backgroundImage: `url(${recomendationsImage.src})`,
+          backgroundRepeat: 'no-repeat',
+          backgroundSize: 'cover',
+        }}
+        className="laptop:hidden bg-[#25232B] bg-center p-3 mt-2 desktop:hidden tablet:hidden"
+      >
         <div>
           <Assertiveness hitHate={results?.hit_rate} />
         </div>
@@ -210,29 +217,29 @@ export function Recomendations() {
         </div>
       </Card>
       <div className="bg-[#25232B] py-4 mt-5 px-11 mobile:px-2 flex mobile:grid mobile:grid-cols-2 justify-around rounded-lg shadow-lg">
-        <div className="flex w-[200px] items-center px-5 mobile:px-1 gap-3 py-3">
+        <div className="flex w-[200px] mobile:text-center mobile:w-full mobile:flex-col items-center px-5 mobile:px-1 mobile:gap-1 gap-3 py-3">
           <div className="text-[41px] mobile:text-2xl mobile:w-[70px] text-[#76FBB3]">
             {results?.bets_wins}
           </div>
-          <div className="text-sm mobile:w-[70px]">apostas ganhas</div>
+          <div className="text-sm">Ganhas</div>
         </div>
-        <div className="flex w-[200px] items-center px-5 mobile:px-1 gap-3 py-3">
+        <div className="flex w-[200px] mobile:text-center mobile:w-full mobile:flex-col items-center px-5 mobile:px-1 mobile:gap-1 gap-3 py-3">
           <div className="text-[41px] mobile:text-2xl mobile:w-[70px] text-[#F94E63]">
             {results?.bets_losts}
           </div>
-          <div className="text-sm mobile:w-[70px]">apostas perdidas</div>
+          <div className="text-sm ">Perdidas</div>
         </div>
-        <div className="flex w-[200px] items-center px-5 mobile:px-1 gap-3 py-3">
+        <div className="flex w-[200px] mobile:text-center mobile:w-full mobile:flex-col items-center px-5 mobile:px-1 mobile:gap-1 gap-3 py-3">
           <div className="text-[41px] mobile:text-2xl mobile:w-[70px] text-[#91CCF8]">
             {results?.bets_returned}
           </div>
-          <div className="text-sm mobile:w-[70px]">apostas devolvidas</div>
+          <div className="text-sm">Devolvidas</div>
         </div>
-        <div className="flex w-[210px]  items-center px-5 mobile:px-1 gap-3 py-3">
-          <div className="text-[41px] mobile:w-[70px] mobile:text-2xl">
+        <div className="flex w-[210px] mobile:text-center mobile:w-full mobile:flex-col  items-center px-5 mobile:px-1 gap-3 mobile:gap-1 py-3">
+          <div className="text-[41px]  mobile:text-2xl">
             {results?.bets_canceled}
           </div>
-          <div className="text-sm mobile:w-[70px]">apostas em curso</div>
+          <div className="text-sm ">Aguardando</div>
         </div>
       </div>
     </div>

@@ -22,6 +22,7 @@ export function Games() {
     ...getFilterParams(),
     page,
   }
+  console.log(getFilterParams)
 
   const { data, isLoading } = useQuery<{ results: Bets[]; count: number }>(
     ['getBets', params],
@@ -256,23 +257,28 @@ export function Games() {
                       </span>
                     </div>
                   </div>
-                  <div className="flex mobile:items-center flex-col mobile:flex-row mobile:col-span-12 mobile:justify-center col-span-3 ">
-                    <div className="text-lg mobile:text-sm text-ellipsis truncate pr-4 mobile:pr-0">
-                      {bet.home_name}
+                  <div className="flex mobile:items-center flex-col mobile:col-span-12 mobile:justify-center col-span-3 ">
+                    <div className="text-[#a6acbe] mobile:text-sm mt-1 desktop:hidden laptop:hidden tablet:hidden mobile:mt-0 ">
+                      Times
                     </div>
-                    <div className="desktop:hidden laptop:hidden tablet:hidden text-sm px-3">
-                      X
-                    </div>
-                    <div className="text-lg mt-0.5 mobile:text-sm truncate pr-4 mobile:pr-0">
-                      {''}
-                      {bet.away_name}
+                    <div className="flex w-full flex-col mobile:flex-row justify-center">
+                      <div className="text-lg mobile:text-sm text-ellipsis truncate pr-4 mobile:pr-0">
+                        {bet.home_name}
+                      </div>
+                      <div className="desktop:hidden laptop:hidden tablet:hidden text-sm px-3">
+                        X
+                      </div>
+                      <div className="text-lg mt-0.5 mobile:text-sm truncate pr-4 mobile:pr-0">
+                        {''}
+                        {bet.away_name}
+                      </div>
                     </div>
                   </div>
-                  <div className="flex flex-col col-span-2 gap-2 mobile:col-span-12  mobile:justify-center mobile:flex-row mobile:items-center ">
-                    <div className="text-[#a6acbe] mt-1 mobile:hidden">
+                  <div className="flex flex-col col-span-2 gap-2 mobile:col-span-12  mobile:justify-center mobile:gap-0 mobile:mb-1 mobile:items-center ">
+                    <div className="text-[#a6acbe] mobile:text-sm mt-1 mobile:mt-0 ">
                       Liga
                     </div>
-                    <div className="text-sm truncate pr-4">
+                    <div className="text-sm mobile:pr-0 truncate pr-4">
                       {bet.league_name}
                     </div>
                   </div>

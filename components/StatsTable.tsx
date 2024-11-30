@@ -84,12 +84,12 @@ const tableOptions = {
   table_leagues: {
     label: 'Ligas',
     headers: [
-      { label: 'Liga', key: 'league_name', cols: 4, sortable: true },
+      { label: 'Liga', key: 'league_name', cols: 5, sortable: true },
       { label: 'Tips', key: 'recommend', cols: 2, sortable: true },
       { label: 'Green', key: 'quantityGreen', cols: 1, sortable: true },
       { label: 'Red', key: 'quantityRed', cols: 1, sortable: true },
       { label: '%', key: 'assertiveness', cols: 2, sortable: true },
-      { label: 'Lucro', key: 'profit', cols: 2, sortable: true },
+      { label: 'Lucro', key: 'profit', cols: 1, sortable: true },
     ],
   },
   table_probabilities: {
@@ -261,10 +261,10 @@ export function StatsTable() {
           <div className="text-base text-[#D2FD01] underline">Explorar</div>
         </div>
       </DialogTrigger>
-      <DialogContent className="max-w-[1200px] mobile:max-w-[350px] px-4 max-h-[90vh] overflow-auto">
+      <DialogContent className="max-w-[1200px] mobile:max-w-[95vw] px-4 max-h-[90vh]">
         <div className="flex justify-between items-center mb-4 pr-5">
           <DialogTitle className="mobile:hidden">Estatísticas</DialogTitle>
-          <div className="flex items-center gap-2 mobile:justify-between mobile:w-full">
+          <div className="flex items-center gap-2 mobile:justify-start mobile:w-full">
             <FilterComponent />
             <Select
               value={tableType}
@@ -284,11 +284,11 @@ export function StatsTable() {
           </div>
         </div>
         <div>
-          <div className="bg-gradient-to-r mobile:text-[8px] text-black from-[#D2FF00] py-3 to-[#58d764] w-full grid grid-cols-12">
+          <div className="bg-gradient-to-r mobile:text-[10px] text-black from-[#D2FF00] py-3 to-[#58d764] w-full grid grid-cols-12">
             {tableOptions[tableType].headers.map((header) => (
               <div
                 key={header.key}
-                className={`${header.cols === 4 ? 'col-span-4' : header.cols === 3 ? 'col-span-3' : header.cols === 2 ? 'col-span-2' : 'col-span-1'} flex justify-center items-center gap-1 mobile:gap-0 ${
+                className={`${header.cols === 5 ? 'col-span-5' : header.cols === 3 ? 'col-span-3' : header.cols === 2 ? 'col-span-2' : 'col-span-1'} flex justify-center items-center gap-1 mobile:gap-0 ${
                   header.sortable ? 'cursor-pointer' : ''
                 }`}
                 onClick={() => header.sortable && handleSort(header.key)}
@@ -342,18 +342,18 @@ export function StatsTable() {
           ) : isLoading ? (
             <div className="flex justify-center py-4">Carregando...</div>
           ) : (
-            <div className="flex flex-col mt-1 gap-2">
+            <div className="flex flex-col mt-1 gap-2 overflow-auto max-h-[41%]">
               {paginatedData.map((item, index) => (
                 <div
                   key={index}
-                  className="bg-[#3B3A40] mobile:text-[8px] py-2 w-full grid grid-cols-12"
+                  className="bg-[#3B3A40] mobile:text-[10px] py-2 w-full grid grid-cols-12"
                 >
                   {tableOptions[tableType].headers.map((header) => {
                     // Determina o colspan baseado no tipo da tabela e na coluna
                     return (
                       <div
                         key={header.key}
-                        className={`${header.cols === 4 ? 'col-span-4' : header.cols === 3 ? 'col-span-3' : header.cols === 2 ? 'col-span-2' : 'col-span-1'} flex justify-center mobile:text-center mobile:items-center w-full `}
+                        className={`${header.cols === 5 ? 'col-span-5' : header.cols === 3 ? 'col-span-3' : header.cols === 2 ? 'col-span-2' : 'col-span-1'} flex justify-center mobile:text-center mobile:items-center w-full `}
                       >
                         {typeof item[header.key as keyof typeof item] ===
                         'number'

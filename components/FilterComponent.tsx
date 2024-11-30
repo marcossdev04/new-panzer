@@ -255,7 +255,7 @@ export function FilterComponent() {
       </DialogTrigger>
       <DialogContent className="h-2/3 mobile:max-w-[350px] px-5">
         <DialogTitle>Filtros</DialogTitle>
-        <div className="overflow-auto h-[100%] px-2">
+        <div className="overflow-auto h-[100%] py-2 px-2">
           <div className="flex flex-col gap-6 w-full">
             {/* Date Range Select */}
             <div className="flex flex-col w-full gap-1">
